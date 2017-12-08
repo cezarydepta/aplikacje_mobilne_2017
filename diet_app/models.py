@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 
 class Profile(User):
-    height = models.IntegerField(blank=True)
-    gender = models.CharField(max_length=1, null=True)
-    daily_kcal = models.FloatField(null=True)
-    daily_carbs = models.FloatField(null=True)
-    daily_fat = models.FloatField(null=True)
-    daily_proteins = models.FloatField(null=True)
+    height = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=1, blank=True)
+    daily_kcal = models.FloatField(null=True, blank=True)
+    daily_carbs = models.FloatField(null=True, blank=True)
+    daily_fat = models.FloatField(null=True, blank=True)
+    daily_proteins = models.FloatField(null=True, blank=True)
 
 
 class Weight(models.Model):
@@ -24,10 +24,10 @@ class Diary(models.Model):
 
 class Meal(models.Model):
     diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE)
-    total_kcal = models.FloatField(null=True)
-    total_carbs = models.FloatField(null=True)
-    total_proteins = models.FloatField(null=True)
-    total_fat = models.FloatField(null=True)
+    total_kcal = models.FloatField(null=True, blank=True)
+    total_carbs = models.FloatField(null=True, blank=True)
+    total_proteins = models.FloatField(null=True, blank=True)
+    total_fat = models.FloatField(null=True, blank=True)
 
 
 class MealType(models.Model):
@@ -37,10 +37,10 @@ class MealType(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=30)
-    kcal = models.FloatField(null=True)
-    carbs = models.FloatField(null=True)
-    proteins = models.FloatField(null=True)
-    fat = models.FloatField(null=True)
+    kcal = models.FloatField(null=True, blank=True)
+    carbs = models.FloatField(null=True, blank=True)
+    proteins = models.FloatField(null=True, blank=True)
+    fat = models.FloatField(null=True, blank=True)
 
 
 class Ingredient(models.Model):
