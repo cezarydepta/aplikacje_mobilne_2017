@@ -12,13 +12,13 @@ class Profile(User):
 
 
 class Weight(models.Model):
-    user_id = models.ForeignKey(Profile)
+    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     value = models.FloatField()
     date = models.DateField()
 
 
 class Diary(models.Model):
-    user_id = models.ForeignKey(Profile)
+    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     date = models.DateField()
 
 
