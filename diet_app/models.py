@@ -25,7 +25,7 @@ class Diary(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return str(self.date)
+        return 'Diary for user {} from {}'.format(self.user_id, self.date)
 
 
 class Meal(models.Model):
