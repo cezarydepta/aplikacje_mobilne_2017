@@ -113,3 +113,41 @@ class DisciplineViewTests(TestCase):
 
         assert response.status_code == 400
         assert response.json() == {}
+
+
+class DisciplinesViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test."""
+        self.factory = RequestFactory()
+        self.discipline1 = Discipline.objects.create(name='Bieganie', calories_burn=400)
+        self.discipline2 = Discipline.objects.create(name='Taniec', calories_burn=300)
+
+    def test_disciplines_get_correct_params(self):
+        """Testing GET disciplines view with correct params"""
+        response = self.client.get(reverse('disciplines'), {'name': 'ga'})
+
+        assert response.status_code == 200
+        assert response.json() == [{'id': self.discipline1.id, 'name': self.discipline1.name}]
+
+        response = self.client.get(reverse('disciplines'), {'name': 'a'})
+
+        assert response.status_code == 200
+        assert response.json() == [{'id': self.discipline1.id, 'name': self.discipline1.name},
+                                   {'id': self.discipline2.id, 'name': self.discipline2.name}]
+
+        response = self.client.get(reverse('disciplines'), {'name': 'Dancing with unicorns'})
+
+        assert response.status_code == 200
+        assert response.json() == []
+
+        response = self.client.get(reverse('disciplines'), {'name': ''})
+
+        assert response.status_code == 200
+        assert response.json() == [{'id': self.discipline1.id, 'name': self.discipline1.name},
+                                   {'id': self.discipline2.id, 'name': self.discipline2.name}]
+
+    def test_disciplines_get_missing_params(self):
+        """Testing GET disciplines view with missing params"""
+        response = self.client.get(reverse('disciplines'), {})
+        assert response.status_code == 400
+        assert response.json() == []

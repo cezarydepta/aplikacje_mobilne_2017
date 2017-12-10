@@ -54,13 +54,15 @@ def disciplines(request):
     if request.method == 'GET':
         discipline_part_name = request.GET.get('name')
 
+        if discipline_part_name is None: return JsonResponse([], safe=False, status=400)
+
         try:
             searched_disciplines = Discipline.objects.filter(name__contains='{}'.format(discipline_part_name))
             response = [discipline.to_representation() for discipline in searched_disciplines]
             return JsonResponse(response, safe=False)
 
         except (IntegrityError, ObjectDoesNotExist, ValueError):
-            return JsonResponse({}, status=400)
+            return JsonResponse([], safe=False, status=400)
 
 
 def discipline(request):
