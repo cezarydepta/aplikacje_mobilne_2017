@@ -48,10 +48,19 @@ def disciplines(request):
     Disciplines endpoint implementation.
 
     :param request: HttpRequest objects
-    :return: {'name': name, 'calories_burn': calories_burn}
+    :return: List of searched disciplines
     :rtype: JsonResponse objects
     """
-    pass
+    if request.method == 'GET':
+        discipline_part_name = request.GET.get('name')
+
+        try:
+            searched_disciplines = Discipline.objects.filter(name__contains='{}'.format(discipline_part_name))
+            response = [discipline.to_representation() for discipline in searched_disciplines]
+            return JsonResponse(response, safe=False)
+
+        except (IntegrityError, ObjectDoesNotExist, ValueError):
+            return JsonResponse({}, status=400)
 
 
 def discipline(request):
@@ -59,7 +68,7 @@ def discipline(request):
     Discipline endpoint implementation.
 
     :param: request: HttpRequest objects
-    :return: {'name': name, 'calories_burn': calories_burn}
+    :return: Dictionary with name and calories burn of discipline
     :rtype: JsonResponse objects
     """
     if request.method == 'GET':

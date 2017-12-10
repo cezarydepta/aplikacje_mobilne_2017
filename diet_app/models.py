@@ -117,6 +117,9 @@ class Discipline(models.Model):
         """String representation of an object"""
         return self.name
 
+    def to_representation(self):
+        return {'id': self.id, 'name': self.name}
+
 
 class Activity(models.Model):
     """Class represent how long, and what discipline user was doing"""
