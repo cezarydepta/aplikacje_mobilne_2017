@@ -41,3 +41,36 @@ def diary(request):
 
         except ValidationError as err:
             return JsonResponse({'err': err.message}, status=400)
+
+
+def disciplines(request):
+    """
+    Disciplines endpoint implementation.
+
+    :param request: HttpRequest objects
+    :return: {'name': name, 'calories_burn': calories_burn}
+    :rtype: JsonResponse objects
+    """
+    pass
+
+
+def discipline(request):
+    """
+    Discipline endpoint implementation.
+
+    :param: request: HttpRequest objects
+    :return: {'name': name, 'calories_burn': calories_burn}
+    :rtype: JsonResponse objects
+    """
+    if request.method == 'GET':
+        discipline_id = request.GET.get('discipline_id')
+
+        try:
+            discipline_data = Discipline.objects.get(id=discipline_id)
+            return JsonResponse({'name': discipline_data.name, 'calories_burn': discipline_data.calories_burn})
+
+        except (IntegrityError, ObjectDoesNotExist, ValueError):
+            return JsonResponse({}, status=400)
+
+        except ValidationError as err:
+            return JsonResponse({'err': err.message}, status=400)
