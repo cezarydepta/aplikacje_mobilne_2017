@@ -20,7 +20,7 @@ class Profile(User):
 
 class Weight(models.Model):
     """Class represents weights of the user"""
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     """ID of the user"""
     value = models.FloatField()
     """User weight"""
@@ -34,19 +34,19 @@ class Weight(models.Model):
 
 class Diary(models.Model):
     """Class represents diary that contains all daily information"""
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     """ID of the user"""
     date = models.DateField()
     """Date of the diary"""
 
     def __str__(self):
         """String representation of an object"""
-        return 'Diary for user {} from {}'.format(self.user_id, self.date)
+        return 'Diary for user {} from {}'.format(self.user, self.date)
 
 
 class Meal(models.Model):
     """Class represents information about meal"""
-    diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE)
+    diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     """ID of the diary"""
     total_kcal = models.FloatField(null=True, blank=True)
     """Meal calories"""
@@ -64,7 +64,7 @@ class Meal(models.Model):
 
 class MealType(models.Model):
     """Class defines what type of meal it is (eg. breakfast, lunch, dinner)"""
-    meal_id = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
     """ID of the meal"""
     name = models.CharField(max_length=30)
     """Name of meal (eg. breakfast, lunch, dinner)"""
@@ -94,7 +94,7 @@ class Product(models.Model):
 
 class Ingredient(models.Model):
     """Class represents how much of product user ate"""
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     """ID of the product"""
     meal_id = models.ForeignKey(Meal, null=True, on_delete=models.CASCADE)
     """ID of the meal"""
@@ -120,7 +120,7 @@ class Discipline(models.Model):
 
 class Activity(models.Model):
     """Class represent how long, and what discipline user was doing"""
-    diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE)
+    diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     """ID of the diary"""
     discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE)
     """ID of the discipline"""
