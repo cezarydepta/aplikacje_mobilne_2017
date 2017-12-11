@@ -125,11 +125,11 @@ class Activity(models.Model):
     """Class represent how long, and what discipline user was doing"""
     diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     """ID of the diary"""
-    discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE)
+    discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE)
     """ID of the discipline"""
     time = models.TimeField()
     """How long user was training"""
 
     def __str__(self):
         """String representation of an object"""
-        return str(self.discipline_id)
+        return str(self.discipline)

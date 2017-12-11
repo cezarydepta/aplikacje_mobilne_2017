@@ -1,6 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 from django.db import IntegrityError
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from diet_app.models import *
 
 
@@ -87,6 +89,7 @@ def discipline(request):
             return JsonResponse({'err': err.message}, status=400)
 
 
+@csrf_exempt
 def activity(request):
     """
     Activity endpoint implementation
@@ -103,10 +106,21 @@ def activity(request):
         try:
             discipline_data = Discipline.objects.get(id=discipline)
             diary_data = Diary.objects.get(id=diary)
-            Activity.objects.create(diary=diary_data.id, discipline=discipline_data.id, time=time)
+            Activity.objects.create(diary=diary_data, discipline=discipline_data, time=time)
             return JsonResponse({}, status=200)
 
         except (IntegrityError, ObjectDoesNotExist, MultipleObjectsReturned):
+            return JsonResponse({}, status=400)
+
+    if request.method == 'DELETE':
+        activity = request.GET.get('activity_id')
+
+        try:
+            activity_data = Activity.objects.get(id=activity)
+            Activity.objects.filter(id=activity_data.id).delete()
+            return JsonResponse({}, status=200)
+
+        except ObjectDoesNotExist:
             return JsonResponse({}, status=400)
 
 
