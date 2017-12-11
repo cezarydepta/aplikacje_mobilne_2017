@@ -149,5 +149,6 @@ class DisciplinesViewTests(TestCase):
     def test_disciplines_get_missing_params(self):
         """Testing GET disciplines view with missing params"""
         response = self.client.get(reverse('disciplines'), {})
+
         assert response.status_code == 400
         assert response.json() == []

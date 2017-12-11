@@ -85,3 +85,28 @@ def discipline(request):
 
         except ValidationError as err:
             return JsonResponse({'err': err.message}, status=400)
+
+
+def activity(request):
+    """
+    Activity endpoint implementation
+
+    :param request: HttpRequest objects
+    :return: Empty dictionary
+    :rtype: JsonResponse objects
+    """
+    if request.method == 'POST':
+        diary = request.POST.get('diary_id')
+        discipline = request.POST.get('discipline_id')
+        time = request.POST.get('time')
+
+        try:
+            discipline_data = Discipline.objects.get(id=discipline)
+            diary_data = Diary.objects.get(id=diary)
+            Activity.objects.create(diary=diary_data.id, discipline=discipline_data.id, time=time)
+            return JsonResponse({}, status=200)
+
+        except (IntegrityError, ObjectDoesNotExist, MultipleObjectsReturned):
+            return JsonResponse({}, status=400)
+
+
