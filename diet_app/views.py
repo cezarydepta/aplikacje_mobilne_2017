@@ -109,7 +109,7 @@ def activity(request):
             Activity.objects.create(diary=diary_data, discipline=discipline_data, time=time)
             return JsonResponse({}, status=200)
 
-        except (IntegrityError, ObjectDoesNotExist, MultipleObjectsReturned):
+        except (IntegrityError, ObjectDoesNotExist, MultipleObjectsReturned, ValidationError):
             return JsonResponse({}, status=400)
 
     if request.method == 'DELETE':
