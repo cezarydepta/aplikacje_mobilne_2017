@@ -1,5 +1,5 @@
-from django.db import IntegrityError
-from django.test import TestCase, RequestFactory
+from django.db import IntegrityError, transaction
+from django.test import TestCase, RequestFactory, Client
 from django.urls import reverse
 
 
@@ -173,11 +173,11 @@ class ActivityViewTests(TestCase):
 
     def test_activity_post_correct_params(self):
         """Testing POST activity view with correct params"""
-        activities_before = (Activity.objects.all().count())
+        activities_before = Activity.objects.all().count()
         response = self.client.post(reverse('activity'), {'diary_id': self.diary1.id,
                                                           'discipline_id': self.discipline1.id,
                                                           'time': '00:20:00'})
-        activities_after = (Activity.objects.all().count())
+        activities_after = Activity.objects.all().count()
 
         assert response.status_code == 200
         assert response.json() == {}
@@ -191,4 +191,31 @@ class ActivityViewTests(TestCase):
 
         assert response.status_code == 400
         assert response.json() == {}
+
+    def test_activity_post_missing_params(self):
+        """Testing POST activity view with missing params"""
+        response = self.client.post(reverse('activity'), {'diary_id': self.diary1.id,
+                                                          'discipline_id': self.discipline2.id})
+
+        assert response.status_code == 400
+        assert response.json() == {}
+
+    # def test_activity_delete_correct_params(self):
+    #     """Testing DELETE activity view with correct params"""
+    #     response = self.client.delete(reverse('activity'), {'activity_id': self.activity1.id})
+    #
+    #     assert response.status_code == 200
+    #     assert response.json() == {}
+
+
+
+
+
+
+
+
+
+
+
+
 

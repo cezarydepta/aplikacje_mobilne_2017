@@ -112,15 +112,26 @@ def activity(request):
         except (IntegrityError, ObjectDoesNotExist, MultipleObjectsReturned, ValidationError):
             return JsonResponse({}, status=400)
 
-    if request.method == 'DELETE':
-        activity = request.GET.get('activity_id')
+    # if request.method == 'DELETE':
+    #
+    #     activity = request.DELETE.get('activity_id')
+    #     try:
+    #         activity_data = Activity.objects.get(id=activity)
+    #         Activity.objects.filter(id=activity_data.id).delete()
+    #         return JsonResponse({}, status=200)
+    #
+    #     except ObjectDoesNotExist:
+    #         return JsonResponse({}, status=400)
 
-        try:
-            activity_data = Activity.objects.get(id=activity)
-            Activity.objects.filter(id=activity_data.id).delete()
-            return JsonResponse({}, status=200)
 
-        except ObjectDoesNotExist:
-            return JsonResponse({}, status=400)
+
+
+
+
+
+
+
+
+
 
 
