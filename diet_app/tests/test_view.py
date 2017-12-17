@@ -200,12 +200,12 @@ class ActivityViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {}
 
-    # def test_activity_delete_correct_params(self):
-    #     """Testing DELETE activity view with correct params"""
-    #     response = self.client.delete(reverse('activity'), {'activity_id': self.activity1.id})
-    #
-    #     assert response.status_code == 200
-    #     assert response.json() == {}
+    def test_activity_delete_correct_params(self):
+        """Testing DELETE activity view with correct params"""
+        response = self.client.delete(reverse('activity'), {'activity_id': self.activity1.id})
+
+        assert response.status_code == 200
+        assert response.json() == {}
 
 
 

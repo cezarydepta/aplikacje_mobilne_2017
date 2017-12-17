@@ -59,13 +59,13 @@ class Meal(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return str(self.diary_id)
+        return str(self.id)
 
 
 class MealType(models.Model):
     """Class defines what type of meal it is (eg. breakfast, lunch, dinner)"""
-    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-    """ID of the meal"""
+    meals = models.ManyToManyField(Meal)
+    """ID of the meals"""
     name = models.CharField(max_length=30)
     """Name of meal (eg. breakfast, lunch, dinner)"""
 
