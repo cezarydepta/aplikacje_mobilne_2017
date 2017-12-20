@@ -16,7 +16,9 @@ class DiaryView(APIView):
     def get(self, request):
         serializer = DiarySerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+        data = serializer.data
+        status = 200 if data else 400
+        return Response(data, status)
 
     def post(self, request):
         serializer = DiarySerializer(data=request.data)
@@ -29,7 +31,9 @@ class ActivityView(APIView):
     def get(self, request):
         serializer = ActivityGetSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+        data = serializer.data
+        status = 200 if data else 400
+        return Response(data, status)
 
     def post(self, request):
         serializer = ActivityCreateSerializer(data=request.data)
@@ -44,11 +48,13 @@ class ActivityView(APIView):
         return Response(serializer.data)
 
 # LIST OF DICTIONARIES - TODO
-# class ActivitiesView(APIView):
-#     def get(self, request, format=None):
-#         serializer = ActivitiesListSerializer(data=request.query_params)
-#         serializer.is_valid(raise_exception=True)
-#         return Response(serializer.data)
+class ActivitiesView(APIView):
+    def get(self, request, format=None):
+        serializer = ActivitiesListSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        import pdb
+        pdb.set_trace()
+        return Response(serializer.data)
 
 
 class DisciplineView(APIView):
@@ -78,11 +84,11 @@ class ProductView(APIView):
         return Response(serializer.data)
 
 # LIST OF DICTIONARIES AND SEARCHING - TODO
-# class ProductsView(APIView):
-#     def get(self, request):
-#         serializer = ProductsGetSerializer(data=request.query_params)
-#         serializer.is_valid()
-#         return Response(serializer.data)
+class ProductsView(APIView):
+    def get(self, request):
+        serializer = ProductsGetSerializer(data=request.query_params)
+        serializer.is_valid()
+        return Response(serializer.data)
 
 
 

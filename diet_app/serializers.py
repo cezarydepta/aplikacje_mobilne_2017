@@ -1,4 +1,7 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
+from rest_framework.serializers import ListSerializer
+
 from diet_app.models import *
 
 
@@ -7,8 +10,11 @@ class DiarySerializer(serializers.Serializer):
     date = serializers.DateField()
 
     def to_representation(self, instance):
-        diary = Diary.objects.get(**instance)
-        return {'diary_id': diary.id}
+        try:
+            diary = Diary.objects.get(**instance)
+            return {'diary_id': diary.id}
+        except ObjectDoesNotExist:
+            return {}
 
     def create(self, validated_data):
         return Diary.objects.get_or_create(**validated_data)[0]
@@ -18,10 +24,13 @@ class ActivityGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        activity = Activity.objects.get(**instance)
-        return {'name': activity.discipline.name,
-                'calories_burn': activity.discipline.calories_burn,
-                'time': activity.time}
+        try:
+            activity = Activity.objects.get(**instance)
+            return {'name': activity.discipline.name,
+                    'calories_burn': activity.discipline.calories_burn,
+                    'time': activity.time}
+        except ObjectDoesNotExist:
+            return {}
 
 
 class ActivityCreateSerializer(serializers.Serializer):
@@ -45,15 +54,21 @@ class ActivityDeleteSerializer(serializers.Serializer):
     def delete(self, validated_data):
         Activity.objects.filter(**validated_data).delete()
 
+
 # LIST OF DICTIONARIES - TODO
-# class ActivitiesListSerializer(serializers.Serializer):
-#     diary_id = serializers.IntegerField
-#
-#     def to_representation(self, instance):
-#         activity = Activity.objects.get(**instance)
-#         return {'name': activity.discipline.name,
-#                 'calories_burn': activity.discipline.calories_burn,
-#                 'time': activity.time}
+class ActivitiesListSerializer(serializers.Serializer):
+    diary_id = serializers.IntegerField
+
+    def to_representation(self, instance):
+        activities = Activity.objects.filter(**instance)
+        return [{'name': activity.discipline.name,
+                 'calories_burn': activity.discipline.calories_burn,
+                 'time': activity.time} for activity in activities
+                ]
+
+    @property
+    def data(self):
+        return super(serializers.Serializer, self).data
 
 
 class DisciplineSerializer(serializers.Serializer):
@@ -63,6 +78,7 @@ class DisciplineSerializer(serializers.Serializer):
         discipline = Discipline.objects.get(**instance)
         return {'name': discipline.name,
                 'calories_burn': discipline.calories_burn}
+
 
 # LIST OF DICTIONARIES AND SEARCHING - TODO
 # class DisciplinesSerializer(serializers.Serializer):
@@ -100,11 +116,16 @@ class ProductGetSerializer(serializers.Serializer):
                 'proteins': product.proteins,
                 'fat': product.fat}
 
+
 # LIST OF DICTIONARIES AND SEARCHING - TODO
-# class ProductsGetSerializer(serializers.Serializer):
-#     name = serializers.CharField()
-#
-#     def to_representation(self, instance):
-#         product = Product.objects.get(**instance)
-#         return {'produckt_id': product.id,
-#                 'name': product.name}
+class ProductsGetSerializer(serializers.Serializer):
+    name = serializers.CharField()
+
+    def to_representation(self, instance):
+        product = Product.objects.get(**instance)
+        return {'product_id': product.id,
+                'name': product.name}
+
+    @property
+    def data(self):
+        return super(serializers.Serializer).data()
