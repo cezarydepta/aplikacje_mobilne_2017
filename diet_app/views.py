@@ -47,13 +47,11 @@ class ActivityView(APIView):
         serializer.delete(serializer.validated_data)
         return Response(serializer.data)
 
-# LIST OF DICTIONARIES - TODO
+
 class ActivitiesView(APIView):
-    def get(self, request, format=None):
+    def get(self, request):
         serializer = ActivitiesListSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
-        import pdb
-        pdb.set_trace()
         return Response(serializer.data)
 
 
@@ -83,7 +81,7 @@ class ProductView(APIView):
         serializer.create(serializer.validated_data)
         return Response(serializer.data)
 
-# LIST OF DICTIONARIES AND SEARCHING - TODO
+
 class ProductsView(APIView):
     def get(self, request):
         serializer = ProductsGetSerializer(data=request.query_params)

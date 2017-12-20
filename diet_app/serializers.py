@@ -55,7 +55,6 @@ class ActivityDeleteSerializer(serializers.Serializer):
         Activity.objects.filter(**validated_data).delete()
 
 
-# LIST OF DICTIONARIES - TODO
 class ActivitiesListSerializer(serializers.Serializer):
     diary_id = serializers.IntegerField
 
@@ -117,15 +116,15 @@ class ProductGetSerializer(serializers.Serializer):
                 'fat': product.fat}
 
 
-# LIST OF DICTIONARIES AND SEARCHING - TODO
 class ProductsGetSerializer(serializers.Serializer):
     name = serializers.CharField()
 
     def to_representation(self, instance):
-        product = Product.objects.get(**instance)
-        return {'product_id': product.id,
-                'name': product.name}
+        products = Product.objects.filter(name__contains='{}'.format(instance.get('name')))
+        return [{'product_id': product.id,
+                 'name': product.name} for product in products
+                ]
 
     @property
     def data(self):
-        return super(serializers.Serializer).data()
+        return super(serializers.Serializer, self).data
