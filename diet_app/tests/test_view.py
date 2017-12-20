@@ -75,34 +75,31 @@ class DiaryViewTests(TestCase):
         assert response.json() == {'date': ['Date has wrong format. Use one of these formats instead: YYYY[-MM[-DD]].']}
 
 
-# class DisciplineViewTests(TestCase):
-#     def setUp(self):
-#         """Setting up for test."""
-#         self.factory = APIRequestFactory()
-#         self.client = APIClient()
-#         self.discipline = Discipline.objects.create(name='Bieganie', calories_burn=400)
-#
-#     def test_discipline_get_correct_params(self):
-#         """Testing GET discipline view with correct params"""
-#         response = self.client.get(reverse('discipline'), {'discipline_id': self.discipline.id})
-#
-#         assert response.status_code == 200
-#         assert response.json() == {'name': self.discipline.name, 'calories_burn': self.discipline.calories_burn}
-#
-#     def test_discipline_get_incorrect_params(self):
-#         """Testing GET discipline view with incorrect params"""
-#         response = self.client.get(reverse('discipline'), {'discipline_id': 'Majestic Unicorn'})
-#
-#         assert response.status_code == 400
-#         assert response.json() == {}
-#
-#     def test_discipline_get_missing_params(self):
-#         """Testing GET discipline view with missing params"""
-#         response = self.client.get(reverse('discipline'), {})
-#
-#         assert response.status_code == 400
-#         assert response.json() == {}
-#
+class DisciplineViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test."""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.discipline = Discipline.objects.create(name='Bieganie', calories_burn=400)
+
+    def test_discipline_get_correct_params(self):
+        """Testing GET discipline view with correct params"""
+        response = self.client.get(reverse('discipline'), {'id': self.discipline.id})
+        assert response.status_code == 200
+        assert response.json() == {'name': self.discipline.name, 'calories_burn': self.discipline.calories_burn}
+
+    def test_discipline_get_incorrect_params(self):
+        """Testing GET discipline view with incorrect params"""
+        response = self.client.get(reverse('discipline'), {'id': 'Majestic Unicorn'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+
+    def test_discipline_get_missing_params(self):
+        """Testing GET discipline view with missing params"""
+        response = self.client.get(reverse('discipline'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+
 
 class DisciplinesViewTests(TestCase):
     def setUp(self):
