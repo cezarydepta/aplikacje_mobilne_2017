@@ -84,7 +84,8 @@ class DisciplinesSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         disciplines = Discipline.objects.filter(name__contains='{}'.format(instance.get('name')))
-        return [{'name': discipline.name,
+        return [{'id': discipline.id,
+                 'name': discipline.name,
                  'calories_burn': discipline.calories_burn} for discipline in disciplines
                 ]
 
