@@ -79,14 +79,18 @@ class DisciplineSerializer(serializers.Serializer):
                 'calories_burn': discipline.calories_burn}
 
 
-# LIST OF DICTIONARIES AND SEARCHING - TODO
-# class DisciplinesSerializer(serializers.Serializer):
-#     name = serializers.CharField(max_length=30)
-#
-#     def to_representation(self, instance):
-#         discipline = Discipline.objects.get(**instance)
-#         return {'name': discipline.id,
-#                'calories_burn': discipline.calories_burn}
+class DisciplinesSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=30)
+
+    def to_representation(self, instance):
+        disciplines = Discipline.objects.filter(name__contains='{}'.format(instance.get('name')))
+        return [{'name': discipline.name,
+                 'calories_burn': discipline.calories_burn} for discipline in disciplines
+                ]
+
+    @property
+    def data(self):
+        return super(serializers.Serializer, self).data
 
 
 class ProductCreateSerializer(serializers.Serializer):

@@ -61,12 +61,12 @@ class DisciplineView(APIView):
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
 
-# LIST OF DICTIONARIES AND SEARCHING - TODO
-# class DisciplinesView(APIView):
-#     def get(self, request):
-#         serializer = DisciplinesSerializer(data=request.query_params)
-#         serializer.is_valid(raise_exception=True)
-#         return Response(serializer.data)
+
+class DisciplinesView(APIView):
+    def get(self, request):
+        serializer = DisciplinesSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
 
 class ProductView(APIView):

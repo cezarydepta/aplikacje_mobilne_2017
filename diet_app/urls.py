@@ -14,6 +14,6 @@ urlpatterns = [
     path('product/', views.ProductView.as_view(), name='product'),
     path('products/', views.ProductsView.as_view(), name='products'),
     path('discipline/', views.DisciplineView.as_view(), name='discipline'),
-    # path('disciplines/', views.DisciplinesView.as_view(), name='disciplines'),
+    path('disciplines/', views.DisciplinesView.as_view(), name='disciplines'),
 
 ]
