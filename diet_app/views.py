@@ -51,6 +51,20 @@ class ActivityView(APIView):
 #         return Response(serializer.data)
 
 
+class DisciplineView(APIView):
+    def get(self, request):
+        serializer = DisciplineSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+
+# LIST OF DICTIONARIES AND SEARCHING - TODO
+# class DisciplinesView(APIView):
+#     def get(self, request):
+#         serializer = DisciplinesSerializer(data=request.query_params)
+#         serializer.is_valid(raise_exception=True)
+#         return Response(serializer.data)
+
+
 class ProductView(APIView):
     def get(self, request):
         serializer = ProductGetSerializer(data=request.query_params)

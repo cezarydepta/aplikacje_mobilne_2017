@@ -56,6 +56,24 @@ class ActivityDeleteSerializer(serializers.Serializer):
 #                 'time': activity.time}
 
 
+class DisciplineSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        discipline = Discipline.objects.get(**instance)
+        return {'name': discipline.name,
+                'calories_burn': discipline.calories_burn}
+
+# LIST OF DICTIONARIES AND SEARCHING - TODO
+# class DisciplinesSerializer(serializers.Serializer):
+#     name = serializers.CharField(max_length=30)
+#
+#     def to_representation(self, instance):
+#         discipline = Discipline.objects.get(**instance)
+#         return {'name': discipline.id,
+#                'calories_burn': discipline.calories_burn}
+
+
 class ProductCreateSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=30)
     kcal = serializers.FloatField()
