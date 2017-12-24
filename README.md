@@ -139,29 +139,18 @@ This request creates a new diary record if provided data is valid and returns di
   line-height: 19px;
   overflow: auto;
   padding: 5px 5px;
-  border-radius: 3px;">GET</span> /api/meals/
+  border-radius: 3px;">GET</span> /api/meal/
 
-Endpoint returns list of meal_ids if provided data is valid otherwise return empty dictionary.
-
-  | Required parameters |
-  | ------------------- |
-  | user_id            |
-
-  | Returns |
-  | --------------|
-  | [{<br>&nbsp;&nbsp;&nbsp;&nbsp;"meal_id": meal_id,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_kcal": total_kcal,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_carbs": total_carbs,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_protein": total_protein,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_fat": total_fat,<br>&nbsp;&nbsp;&nbsp;&nbsp;"type": type,<br>&nbsp;&nbsp;&nbsp;&nbsp;"ingredients": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient_id": ingredient_id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": amount<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>}] |
-
-> <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span> /api/meals/
-
-  This request creates a 3 default meal records (breakfast, lunch, dinner) if provided data is valid 	and returns dictionary of meal_ids otherwise return empty dictionary.
+Endpoint returns information about meal if provided data is valid otherwise return empty dictionary.
 
   | Required parameters |
   | ------------------- |
-  | diary_id            |
+  | meal_id            |
 
   | Returns |
   | --------------|
-  | { "breakfast": meal_id,<br>"dinner": meal_id,<br>"lunch": meal_id } or {} |
+  | {<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_kcal": total_kcal,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_carbs": total_carbs,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_protein": total_protein,<br>&nbsp;&nbsp;&nbsp;&nbsp;"total_fat": total_fat,<br>&nbsp;&nbsp;&nbsp;&nbsp;"ingredients": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient_id": ingredient_id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": amount<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>} |
+
 
 > <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span> /api/meal/
 
@@ -169,11 +158,33 @@ This request create a new meal record if provided data is valid and returns meal
 
 | Required parameters |
 | ------------------- |
-| diary_id            |
+| meal_type_id            |
 
 | Returns |
 | --------------|
 | meal_id or {} |
+
+> <span style="background-color: YELLOW;
+        border: 1px YELLOW;
+        font-size: 13px;
+        line-height: 19px;
+        overflow: auto;
+        padding: 5px 5px;
+        border-radius: 3px;">PUT</span> /api/meal/
+
+  This request updates meal record if provided data is valid and returns empty	dictionary.
+
+  | Required parameters |
+  | ------------------- |
+  | meal_id            |
+  |total_kcal|
+  |total_carbs|
+  |total_proteins|
+  |total_fat|
+
+  | Returns |
+  | --------------|
+  | {} |
 
 > <span style="background-color: #CC0000 ;
             border: 1px #CC0000   ;
@@ -193,24 +204,6 @@ This request deletes meal record if provided data is valid and returns empty dic
 | --------------|
 | {} |
 
-> <span style="background-color: lightblue;
-  border: 1px lightblue;
-  font-size: 13px;
-  line-height: 19px;
-  overflow: auto;
-  padding: 5px 5px;
-  border-radius: 3px;">GET</span> /api/meal/
-
-Endpoint returns list of meal_id if provided data is valid otherwise return empty dictionary. If 	meal with given name doesn’t exist new meal type is created.
-
-| Required parameters |
-| ------------------- |
-| diary_id            |
-| name_id            |
-
-| Returns |
-| --------------|
-| meal_id or {} |
 
 ## Meal type
 
@@ -220,13 +213,35 @@ Endpoint returns list of meal_id if provided data is valid otherwise return empt
   line-height: 19px;
   overflow: auto;
   padding: 5px 5px;
-  border-radius: 3px;">GET</span> /api/meal-type/
+  border-radius: 3px;">GET</span> /api/meal-types/
 
 Endpoint returns list of dictionaries with information about meal types.
 
+| Required parameters |
+| ------------------- |
+| diary_id            |
+
 | Returns |
 | --------------|
-| [{ "meal_type_id": meal_type_id,<br>&nbsp;&nbsp;&nbsp;"name": name }] |
+| [{ "meal_type_id": meal_type_id,<br>&nbsp;&nbsp;&nbsp;"name": name, <br>&nbsp;&nbsp;&nbsp;"total_kcal": meal\__total_kcal, <br>&nbsp;&nbsp;&nbsp;"total_carbs": meal\__total_carbs, <br>&nbsp;&nbsp;&nbsp;"total_protein": meal\__total_protein, <br>&nbsp;&nbsp;&nbsp;"total_fat": meal\__total_fat <br>&nbsp;&nbsp;&nbsp;"ingredients": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient_id": ingredient_id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": amount<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>}] |
+
+> <span style="background-color: lightblue;
+  border: 1px lightblue;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 5px 5px;
+  border-radius: 3px;">GET</span> /api/meal-type/
+
+Endpoint returns information about meal type.
+
+| Required parameters |
+| ------------------- |
+| meal_type_id            |
+
+| Returns |
+| --------------|
+| { "name": name, <br>&nbsp;&nbsp;&nbsp;"total_kcal": meal\__total_kcal, <br>&nbsp;&nbsp;&nbsp;"total_carbs": meal\__total_carbs, <br>&nbsp;&nbsp;&nbsp;"total_protein": meal\__total_protein, <br>&nbsp;&nbsp;&nbsp;"total_fat": meal\__total_fat <br>&nbsp;&nbsp;&nbsp;"ingredients": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient_id": ingredient_id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": amount<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>} |
 
 > <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span> /api/meal-type/
 
@@ -235,6 +250,7 @@ otherwise if given name exist returns its meal_type_id.
 
 | Required parameters |
 | ------------------- |
+| diary_id |
 | name            |
 
 | Returns |
@@ -261,15 +277,9 @@ This request deletes meal type record if provided data is valid and returns empt
 
 ## Ingredients
 
-> <span style="background-color: YELLOW;
-      border: 1px YELLOW;
-      font-size: 13px;
-      line-height: 19px;
-      overflow: auto;
-      padding: 5px 5px;
-      border-radius: 3px;">PUT</span> /api/ingredient/
+> <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span> /api/ingredient/
 
-This request creates a new ingredient record or update existing one if provided data is valid and returns empty	dictionary.
+This request creates a new ingredient record if provided data is valid and returns ingredient id.
 
 | Required parameters |
 | ------------------- |
@@ -279,7 +289,7 @@ This request creates a new ingredient record or update existing one if provided 
 
 | Returns |
 | --------------|
-| {} |
+| ingredient_id or {} |
 
 > <span style="background-color: #CC0000 ;
             border: 1px #CC0000   ;
