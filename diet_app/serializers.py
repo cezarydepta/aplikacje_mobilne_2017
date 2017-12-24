@@ -137,6 +137,25 @@ class ProductsGetSerializer(serializers.Serializer):
 
 class IngredientCreateSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
+    meal_id = serializers.IntegerField()
+    amount = serializers.FloatField()
+
+    def to_representation(self, instance):
+        ingredient = Ingredient.objects.get(**instance)
+        return {'ingredient_id': ingredient.id}
+
+    def create(self, validated_data):
+        return Ingredient.objects.get_or_create(**validated_data)[0]
+
+
+class IngredientDeleteSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        return {}
+
+    def delete(self, validated_data):
+        Ingredient.objects.filter(**validated_data).delete()
 
 # class MealTypeSerializer(serializers.Serializer):
 #     meals = serializers.IntegerField()

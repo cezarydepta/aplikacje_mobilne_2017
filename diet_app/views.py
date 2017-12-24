@@ -91,7 +91,16 @@ class ProductsView(APIView):
 
 class IngredientView(APIView):
     def post(self, request):
-        pass
+        serializer = IngredientCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.create(serializer.validated_data)
+        return Response(serializer.data)
+
+    def delete(self, request):
+        serializer = IngredientDeleteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.delete(serializer.validated_data)
+        return Response(serializer.data)
 
 # class MealType(APIView):
 #     def get(self, request):
