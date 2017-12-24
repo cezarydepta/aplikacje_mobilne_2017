@@ -77,7 +77,7 @@ class ProductView(APIView):
 
     def post(self, request):
         serializer = ProductCreateSerializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         serializer.create(serializer.validated_data)
         return Response(serializer.data)
 

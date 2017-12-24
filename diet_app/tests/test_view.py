@@ -3,7 +3,7 @@ from django.test import TestCase, RequestFactory, Client
 from django.urls import reverse
 from rest_framework.test import APIRequestFactory, APIClient
 
-from diet_app.models import Diary, Profile, Discipline, Activity
+from diet_app.models import *
 
 
 class DiaryViewTests(TestCase):
@@ -255,3 +255,75 @@ class ActivityViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'id': ['This field is required.']}
         assert activities_before == activities_after
+
+
+class ProductViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test"""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.product1 = Product.objects.create(name='Kaszanka', kcal=500, carbs=10, proteins=10, fat=10)
+        self.product2 = Product.objects.create(name='Śledziki', kcal=400, carbs=0, proteins=20, fat=15)
+        self.name = 'Kanapeckzi'
+        self.kcal = 300
+        self.carbs = 15
+        self.proteins = 5
+        self.fat = 5
+
+    def test_activity_get_correct_params(self):
+        """Testing GET product view with correct params"""
+        response = self.client.get(reverse('product'), {'id': self.product1.id})
+        assert response.status_code == 200
+        assert response.json() == {'name': self.product1.name,
+                                   'kcal': self.product1.kcal,
+                                   'carbs': self.product1.carbs,
+                                   'proteins': self.product1.proteins,
+                                   'fat': self.product1.fat}
+
+    def test_activity_get_incorrect_params(self):
+        """Testing GET product view with incorrect params"""
+        response = self.client.get(reverse('product'), {'id': 'krzeslo'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+
+    def test_activity_get_missing_params(self):
+        """Testing GET product view with missing params"""
+        response = self.client.get(reverse('product'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+
+    def test_activity_post_correct_params(self):
+        """Testing POST product view with correct params"""
+        response = self.client.post(
+            reverse('product'), {'name': self.name,
+                                 'kcal': self.kcal,
+                                 'carbs': self.carbs,
+                                 'proteins': self.proteins,
+                                 'fat': self.fat}
+        )
+        new_product = Product.objects.filter(name=self.name).get()
+        assert response.status_code == 200
+        assert response.json() == {'product_id': new_product.id}
+
+    def test_activity_post_incorrect_params(self):
+        """Testing POST product view with incorrect params"""
+        response = self.client.post(
+            reverse('product'), {'name': 'Makaronik',
+                                 'kcal': 'drzewo',
+                                 'carbs': self.carbs,
+                                 'proteins': self.proteins,
+                                 'fat': self.fat}
+        )
+        assert response.status_code == 400
+        assert response.json() == {'kcal': ['A valid number is required.']}
+
+    def test_activity_post_missing_params(self):
+        """Testing POST product view with missing params"""
+        response = self.client.post(reverse('product'), {})
+        assert response.status_code == 400
+        assert response.json() == {'name': ['This field is required.'],
+                                   'kcal': ['This field is required.'],
+                                   'carbs': ['This field is required.'],
+                                   'proteins': ['This field is required.'],
+                                   'fat': ['This field is required.']}
+
