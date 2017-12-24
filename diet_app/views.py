@@ -85,9 +85,22 @@ class ProductView(APIView):
 class ProductsView(APIView):
     def get(self, request):
         serializer = ProductsGetSerializer(data=request.query_params)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
 
 
+# class MealType(APIView):
+#     def get(self, request):
+#         serializer = MealTypeSerializer(data=request.query_params)
+#         serializer.is_valid(raise_exception=True)
+#         return Response(serializer.data)
+
+
+# class MealsView(APIView):
+#     def get(self, request):
+#         serializer = MealsGetSerializer(data=request.query_params)
+#         serializer.is_valid(raise_exception=True)
+#         return Response(serializer.data)
+#
 
 

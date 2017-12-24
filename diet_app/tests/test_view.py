@@ -368,5 +368,6 @@ class ProductsViewTests(TestCase):
     def test_products_get_missing_params(self):
         """Testing GET products view with missing params"""
         response = self.client.get(reverse('products'), {})
-        assert response.status_code == 200
-        assert response.json() == {}
+        assert response.status_code == 400
+        assert response.json() == {'name': ['This field is required.']}
+

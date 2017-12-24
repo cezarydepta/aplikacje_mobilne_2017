@@ -133,3 +133,31 @@ class ProductsGetSerializer(serializers.Serializer):
     @property
     def data(self):
         return super(serializers.Serializer, self).data
+
+
+# class MealTypeSerializer(serializers.Serializer):
+#     meals = serializers.IntegerField()
+#
+#     def to_representation(self, instance):
+#         meal_types = MealType.objects.get(**instance)
+#         import pdb
+#         pdb.set_trace()
+#         return [{
+#             'meal_type_id': meal_type.id,
+#             'name': meal_type.name} for meal_type in meal_types
+#         ]
+#
+#     @property
+#     def data(self):
+#         return super(serializers.Serializer, self).data
+
+# class MealsGetSerializer(serializers.Serializer):
+#     user_id = serializers.IntegerField()
+#
+#     def to_representation(self, instance):
+#         meals = Meal.objects.get(id=self.user_id)
+#         return []
+#
+#     @property
+#     def data(self):
+#         return super(serializers.Serializer, self).data

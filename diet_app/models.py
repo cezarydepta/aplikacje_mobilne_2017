@@ -44,10 +44,22 @@ class Diary(models.Model):
         return 'Diary for user {} from {}'.format(self.user, self.date)
 
 
-class Meal(models.Model):
-    """Class represents information about meal"""
+class MealType(models.Model):
+    """Class defines what type of meal it is (eg. breakfast, lunch, dinner)"""
     diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     """ID of the diary"""
+    name = models.CharField(max_length=30)
+    """Name of meal (eg. breakfast, lunch, dinner)"""
+
+    def __str__(self):
+        """String representation of an object"""
+        return self.name
+
+
+class Meal(models.Model):
+    """Class represents information about meal"""
+    meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
+    """ID of the meal type"""
     total_kcal = models.FloatField(null=True, blank=True)
     """Meal calories"""
     total_carbs = models.FloatField(null=True, blank=True)
@@ -60,18 +72,6 @@ class Meal(models.Model):
     def __str__(self):
         """String representation of an object"""
         return str(self.id)
-
-
-class MealType(models.Model):
-    """Class defines what type of meal it is (eg. breakfast, lunch, dinner)"""
-    meals = models.ManyToManyField(Meal)
-    """ID of the meals"""
-    name = models.CharField(max_length=30)
-    """Name of meal (eg. breakfast, lunch, dinner)"""
-
-    def __str__(self):
-        """String representation of an object"""
-        return self.name
 
 
 class Product(models.Model):
