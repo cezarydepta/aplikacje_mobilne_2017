@@ -270,7 +270,7 @@ class ProductViewTests(TestCase):
         self.proteins = 5
         self.fat = 5
 
-    def test_activity_get_correct_params(self):
+    def test_product_get_correct_params(self):
         """Testing GET product view with correct params"""
         response = self.client.get(reverse('product'), {'id': self.product1.id})
         assert response.status_code == 200
@@ -280,19 +280,19 @@ class ProductViewTests(TestCase):
                                    'proteins': self.product1.proteins,
                                    'fat': self.product1.fat}
 
-    def test_activity_get_incorrect_params(self):
+    def test_product_get_incorrect_params(self):
         """Testing GET product view with incorrect params"""
         response = self.client.get(reverse('product'), {'id': 'krzeslo'})
         assert response.status_code == 400
         assert response.json() == {'id': ['A valid integer is required.']}
 
-    def test_activity_get_missing_params(self):
+    def test_product_get_missing_params(self):
         """Testing GET product view with missing params"""
         response = self.client.get(reverse('product'), {})
         assert response.status_code == 400
         assert response.json() == {'id': ['This field is required.']}
 
-    def test_activity_post_correct_params(self):
+    def test_product_post_correct_params(self):
         """Testing POST product view with correct params"""
         response = self.client.post(
             reverse('product'), {'name': self.name,
@@ -305,7 +305,7 @@ class ProductViewTests(TestCase):
         assert response.status_code == 200
         assert response.json() == {'product_id': new_product.id}
 
-    def test_activity_post_incorrect_params(self):
+    def test_product_post_incorrect_params(self):
         """Testing POST product view with incorrect params"""
         response = self.client.post(
             reverse('product'), {'name': 'Makaronik',
@@ -317,7 +317,7 @@ class ProductViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'kcal': ['A valid number is required.']}
 
-    def test_activity_post_missing_params(self):
+    def test_product_post_missing_params(self):
         """Testing POST product view with missing params"""
         response = self.client.post(reverse('product'), {})
         assert response.status_code == 400
@@ -327,3 +327,46 @@ class ProductViewTests(TestCase):
                                    'proteins': ['This field is required.'],
                                    'fat': ['This field is required.']}
 
+
+class ProductsViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test"""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.product1 = Product.objects.create(name='Kaszanka', kcal=500, carbs=10, proteins=10, fat=10)
+        self.product2 = Product.objects.create(name='Śledziki', kcal=400, carbs=0, proteins=20, fat=15)
+        self.name = 'Kanapeckzi'
+        self.kcal = 300
+        self.carbs = 15
+        self.proteins = 5
+        self.fat = 5
+
+    def test_products_get_correct_params(self):
+        """Testing GET products view with correct params"""
+        response = self.client.get(reverse('products'), {'name': 'k'})
+        assert response.status_code == 200
+        assert response.json() == [
+            {
+                'product_id': self.product1.id,
+                'name': self.product1.name
+            },
+            {
+                'product_id': self.product2.id,
+                'name': self.product2.name
+            }
+        ]
+
+        response = self.client.get(reverse('products'), {'name': 'kasza'})
+        assert response.status_code == 200
+        assert response.json() == [
+            {
+                'product_id': self.product1.id,
+                'name': self.product1.name
+            }
+        ]
+
+    def test_products_get_missing_params(self):
+        """Testing GET products view with missing params"""
+        response = self.client.get(reverse('products'), {})
+        assert response.status_code == 200
+        assert response.json() == {}
