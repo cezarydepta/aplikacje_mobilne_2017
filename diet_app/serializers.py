@@ -135,6 +135,9 @@ class ProductsGetSerializer(serializers.Serializer):
         return super(serializers.Serializer, self).data
 
 
+class IngredientCreateSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
+
 # class MealTypeSerializer(serializers.Serializer):
 #     meals = serializers.IntegerField()
 #

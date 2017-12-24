@@ -96,7 +96,7 @@ class Ingredient(models.Model):
     """Class represents how much of product user ate"""
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     """ID of the product"""
-    meal_id = models.ForeignKey(Meal, null=True, on_delete=models.CASCADE)
+    meal = models.ForeignKey(Meal, null=True, on_delete=models.CASCADE)
     """ID of the meal"""
     amount = models.FloatField()
     """How much user ate of given product"""

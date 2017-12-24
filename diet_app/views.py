@@ -89,6 +89,10 @@ class ProductsView(APIView):
         return Response(serializer.data)
 
 
+class IngredientView(APIView):
+    def post(self, request):
+        pass
+
 # class MealType(APIView):
 #     def get(self, request):
 #         serializer = MealTypeSerializer(data=request.query_params)
