@@ -371,3 +371,45 @@ class ProductsViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'name': ['This field is required.']}
 
+
+class IngredientViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test"""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.date = "2017-12-13"
+        self.user = Profile.objects.create(username='testytest', password='passsssss')
+        self.diary = Diary.objects.create(user=self.user, date=self.date)
+        self.meal_type = MealType.objects.create(diary=self.diary, name='Śniadanko')
+        self.meal = Meal.objects.create(meal_type=self.meal_type)
+        self.product1 = Product.objects.create(name='Kaszanka', kcal=500, carbs=10, proteins=10, fat=10)
+        self.product2 = Product.objects.create(name='Śledziki', kcal=400, carbs=0, proteins=20, fat=15)
+        self.ingredient = Ingredient.objects.create(meal=self.meal, product=self.product1, amount=2.2)
+
+    def test_ingredient_post_correct_params(self):
+        """Testing POST ingredient view with correct params"""
+        count = Ingredient.objects.all().count()
+        response = self.client.post(reverse('ingredient'), {'product_id': self.product1.id,
+                                                        'meal_id': self.meal.id,
+                                                        'amount': 3})
+        new_ingredient = Ingredient.objects.get(id=2)
+        assert response.status_code == 200
+        assert count == Ingredient.objects.all().count() - 1
+        assert response.json() == {'ingredient_id': new_ingredient.id}
+
+    def test_ingredient_post_incorrect_params(self):
+        """Testing POST ingredient view with incorrect params"""
+        response = self.client.post(reverse('ingredient'), {'product_id': self.product1.id,
+                                                        'meal_id': self.meal.id,
+                                                        'amount': 'kanapka'})
+        assert response.status_code == 400
+        assert response.json() == {'amount': ['A valid number is required.']}
+
+    def test_ingredient_post_missing_params(self):
+        """Testing POST ingredient view with missing params"""
+        response = self.client.post(reverse('ingredient'), {'product_id': self.product1.id,
+                                                            'amount': 3})
+        assert response.status_code == 400
+        assert response.json() == {'meal_id': ['This field is required.']}
+
+
