@@ -16,6 +16,6 @@ urlpatterns = [
     path('ingredient/', views.IngredientView.as_view(), name='ingredient'),
     path('discipline/', views.DisciplineView.as_view(), name='discipline'),
     path('disciplines/', views.DisciplinesView.as_view(), name='disciplines'),
-    # path('meal-type/', views.MealType.as_view(), name='meal_type'),
+    path('meal/', views.MealView.as_view(), name='meal'),
 
 ]

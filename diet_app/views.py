@@ -102,18 +102,15 @@ class IngredientView(APIView):
         serializer.delete(serializer.validated_data)
         return Response(serializer.data)
 
-# class MealType(APIView):
-#     def get(self, request):
-#         serializer = MealTypeSerializer(data=request.query_params)
-#         serializer.is_valid(raise_exception=True)
-#         return Response(serializer.data)
 
+class MealView(APIView):
+    def get(self, request):
+        serializer = MealGetSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
-# class MealsView(APIView):
-#     def get(self, request):
-#         serializer = MealsGetSerializer(data=request.query_params)
-#         serializer.is_valid(raise_exception=True)
-#         return Response(serializer.data)
-#
-
+    def post(self, request):
+        serializer = MealCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 

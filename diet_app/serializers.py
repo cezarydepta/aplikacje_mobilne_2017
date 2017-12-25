@@ -157,21 +157,43 @@ class IngredientDeleteSerializer(serializers.Serializer):
     def delete(self, validated_data):
         Ingredient.objects.filter(**validated_data).delete()
 
-# class MealTypeSerializer(serializers.Serializer):
-#     meals = serializers.IntegerField()
-#
-#     def to_representation(self, instance):
-#         meal_types = MealType.objects.get(**instance)
-#         import pdb
-#         pdb.set_trace()
-#         return [{
-#             'meal_type_id': meal_type.id,
-#             'name': meal_type.name} for meal_type in meal_types
-#         ]
-#
-#     @property
-#     def data(self):
-#         return super(serializers.Serializer, self).data
+
+class IngredientListingField(serializers.RelatedField):
+    def to_representation(self, value):
+        import pdb
+        pdb.set_trace()
+        return {}
+
+
+class MealGetSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    ingredients = IngredientListingField(many=True, read_only=True)
+
+    def to_representation(self, instance):
+        meal = Meal.objects.get(**instance)
+        ingredients = Ingredient.objects.filter(meal=meal)
+        ingredients_list = []
+        for ingredient in ingredients:
+            ingredients_list.append({'ingredient_id': ingredient.id,
+                                     'name': ingredient.product.name,
+                                     'amount': ingredient.amount})
+        return {'total_kcal': meal.total_kcal,
+                'total_carbs': meal.total_carbs,
+                'total_proteins': meal.total_proteins,
+                'total_fat': meal.total_fat,
+                'ingredients': ingredients_list}
+
+
+class MealCreateSerializer(serializers.Serializer):
+    meal_type_id = serializers.IntegerField()
+
+    def create(self, validated_data):
+        return Ingredient.objects.get_or_create(**validated_data)[0]
+
+    def to_representation(self, instance):
+        meal = Meal.objects.get(**instance)
+        return {'meal_id': meal.id}
+
 
 # class MealsGetSerializer(serializers.Serializer):
 #     user_id = serializers.IntegerField()
