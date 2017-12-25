@@ -158,16 +158,8 @@ class IngredientDeleteSerializer(serializers.Serializer):
         Ingredient.objects.filter(**validated_data).delete()
 
 
-class IngredientListingField(serializers.RelatedField):
-    def to_representation(self, value):
-        import pdb
-        pdb.set_trace()
-        return {}
-
-
 class MealGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    ingredients = IngredientListingField(many=True, read_only=True)
 
     def to_representation(self, instance):
         meal = Meal.objects.get(**instance)
@@ -193,6 +185,22 @@ class MealCreateSerializer(serializers.Serializer):
     def to_representation(self, instance):
         meal = Meal.objects.get(**instance)
         return {'meal_id': meal.id}
+
+
+class MealUpdateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    total_kcal = serializers.FloatField(required=False)
+    total_carbs = serializers.FloatField(required=False)
+    total_proteins = serializers.FloatField(required=False)
+    total_fat = serializers.FloatField(required=False)
+
+    def to_representation(self, instance):
+        meal = Meal.objects.get(id=instance.get('id'))
+        return {'id': meal.id}
+
+    def update(self, instance, validated_data):
+        validated_data.pop('id')
+        Meal.objects.update(**validated_data)
 
 
 # class MealsGetSerializer(serializers.Serializer):

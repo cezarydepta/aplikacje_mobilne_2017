@@ -114,3 +114,8 @@ class MealView(APIView):
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
 
+    def put(self, request):
+        serializer = MealUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(serializer.data, serializer.validated_data)
+        return Response(serializer.data)
