@@ -390,8 +390,8 @@ class IngredientViewTests(TestCase):
         """Testing POST ingredient view with correct params"""
         count = Ingredient.objects.all().count()
         response = self.client.post(reverse('ingredient'), {'product_id': self.product1.id,
-                                                        'meal_id': self.meal.id,
-                                                        'amount': 3})
+                                                            'meal_id': self.meal.id,
+                                                            'amount': 3})
         new_ingredient = Ingredient.objects.get(id=2)
         assert response.status_code == 200
         assert count == Ingredient.objects.all().count() - 1
@@ -400,8 +400,8 @@ class IngredientViewTests(TestCase):
     def test_ingredient_post_incorrect_params(self):
         """Testing POST ingredient view with incorrect params"""
         response = self.client.post(reverse('ingredient'), {'product_id': self.product1.id,
-                                                        'meal_id': self.meal.id,
-                                                        'amount': 'kanapka'})
+                                                            'meal_id': self.meal.id,
+                                                            'amount': 'kanapka'})
         assert response.status_code == 400
         assert response.json() == {'amount': ['A valid number is required.']}
 
@@ -412,4 +412,26 @@ class IngredientViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'meal_id': ['This field is required.']}
 
+    def test_ingredient_delete_correct_params(self):
+        """Testing DELETE ingredient view with correct params"""
+        count = Ingredient.objects.all().count()
+        response = self.client.delete(reverse('ingredient'), {'id': self.ingredient.id})
+        assert response.status_code == 200
+        assert response.json() == {}
+        assert count == Ingredient.objects.all().count() + 1
 
+    def test_ingredient_delete_incorrect_params(self):
+        """Testing DELETE ingredient view with incorrect params"""
+        count = Ingredient.objects.all().count()
+        response = self.client.delete(reverse('ingredient'), {'id': 'kanapka'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+        assert count == Ingredient.objects.all().count()
+
+    def test_ingredient_delete_missing_params(self):
+        """Testing DELETE ingredient view with missing params"""
+        count = Ingredient.objects.all().count()
+        response = self.client.delete(reverse('ingredient'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert count == Ingredient.objects.all().count()
