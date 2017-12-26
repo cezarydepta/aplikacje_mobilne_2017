@@ -233,3 +233,13 @@ class MealTypeGetSerializer(serializers.Serializer):
                 'ingredients': ingredients_list}
 
 
+class MealTypeCreateSerializer(serializers.Serializer):
+    diary_id = serializers.IntegerField()
+    name = serializers.CharField(max_length=30)
+
+    def create(self, validated_data):
+        return MealType.objects.get_or_create(**validated_data)[0]
+
+    def to_representation(self, instance):
+        meal_type = MealType.objects.get(**instance)
+        return {'meal_type_id': meal_type.id}
