@@ -119,3 +119,9 @@ class MealView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.update(serializer.data, serializer.validated_data)
         return Response(serializer.data)
+
+    def delete(self, request):
+        serializer = MealDeleteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.delete(serializer.validated_data)
+        return Response(serializer.data)

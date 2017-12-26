@@ -203,6 +203,15 @@ class MealUpdateSerializer(serializers.Serializer):
         Meal.objects.update(**validated_data)
 
 
+class MealDeleteSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        return {}
+
+    def delete(self, validated_data):
+        Meal.objects.filter(**validated_data).delete()
+
 # class MealsGetSerializer(serializers.Serializer):
 #     user_id = serializers.IntegerField()
 #
