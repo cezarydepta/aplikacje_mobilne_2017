@@ -17,5 +17,6 @@ urlpatterns = [
     path('discipline/', views.DisciplineView.as_view(), name='discipline'),
     path('disciplines/', views.DisciplinesView.as_view(), name='disciplines'),
     path('meal/', views.MealView.as_view(), name='meal'),
+    path('meal-type/', views.MealTypeView.as_view(), name='meal-type'),
 
 ]

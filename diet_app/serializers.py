@@ -212,13 +212,24 @@ class MealDeleteSerializer(serializers.Serializer):
     def delete(self, validated_data):
         Meal.objects.filter(**validated_data).delete()
 
-# class MealsGetSerializer(serializers.Serializer):
-#     user_id = serializers.IntegerField()
-#
-#     def to_representation(self, instance):
-#         meals = Meal.objects.get(id=self.user_id)
-#         return []
-#
-#     @property
-#     def data(self):
-#         return super(serializers.Serializer, self).data
+
+class MealTypeGetSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        meal_type = MealType.objects.get(**instance)
+        meal = Meal.objects.get(meal_type=meal_type)
+        ingredients = Ingredient.objects.filter(meal=meal)
+        ingredients_list = []
+        for ingredient in ingredients:
+            ingredients_list.append({'ingredient_id': ingredient.id,
+                                     'name': ingredient.product.name,
+                                     'amount': ingredient.amount})
+        return {'name': meal_type.name,
+                'total_kcal': meal.total_kcal,
+                'total_carbs': meal.total_carbs,
+                'total_proteins': meal.total_proteins,
+                'total_fat': meal.total_fat,
+                'ingredients': ingredients_list}
+
+
