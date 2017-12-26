@@ -243,3 +243,13 @@ class MealTypeCreateSerializer(serializers.Serializer):
     def to_representation(self, instance):
         meal_type = MealType.objects.get(**instance)
         return {'meal_type_id': meal_type.id}
+
+
+class MealTypeDeleteSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        return {}
+
+    def delete(self, validated_data):
+        MealType.objects.filter(**validated_data).delete()
