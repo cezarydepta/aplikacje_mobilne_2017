@@ -253,3 +253,32 @@ class MealTypeDeleteSerializer(serializers.Serializer):
 
     def delete(self, validated_data):
         MealType.objects.filter(**validated_data).delete()
+
+
+class MealTypesSerializer(serializers.Serializer):
+    diary_id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        diary = Diary.objects.get(id=instance.get('diary_id'))
+        meal_types = MealType.objects.filter(diary=diary)
+        data = []
+        for meal_type in meal_types:
+            meal = Meal.objects.get(meal_type=meal_type)
+            ingredients = Ingredient.objects.filter(meal=meal)
+            ingredients_list = []
+            for ingredient in ingredients:
+                ingredients_list.append({'ingredient_id': ingredient.id,
+                                         'name': ingredient.product.name,
+                                         'amount': ingredient.amount})
+            data.append({'meal_type_id': meal_type.id,
+                         'name': meal_type.name,
+                         'total_kcal': meal.total_kcal,
+                         'total_carbs': meal.total_carbs,
+                         'total_proteins': meal.total_proteins,
+                         'total_fat': meal.total_fat,
+                         'ingredients': ingredients_list})
+        return data
+
+    @property
+    def data(self):
+        return super(serializers.Serializer, self).data

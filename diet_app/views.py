@@ -144,3 +144,10 @@ class MealTypeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.delete(serializer.validated_data)
         return Response(serializer.data)
+
+
+class MealTypesView(APIView):
+    def get(self, request):
+        serializer = MealTypesSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
