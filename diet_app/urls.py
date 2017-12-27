@@ -22,5 +22,6 @@ urlpatterns = [
     path('user/', views.UserView.as_view(), name='user'),
     path('weights/', views.WeightsView.as_view(), name='weights'),
     path('weight/', views.WeightView.as_view(), name='weight'),
+    path('login/', views.LoginView.as_view(), name='login'),
 
 ]

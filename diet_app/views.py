@@ -197,3 +197,10 @@ class WeightView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.delete(serializer.validated_data)
         return Response(serializer.data)
+
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
