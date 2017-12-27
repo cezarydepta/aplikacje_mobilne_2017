@@ -52,9 +52,10 @@ This request updates user profile if provided data is valid and returns empty di
   | Optional parametrs |
   | ------------------- |
   | height           |
-  | weight            |
   | gender            |
-  | daily_carbs ; daily_fat ; daily_proteins            |
+  | daily_carbs |
+   |daily_fat |
+   |daily_proteins     |
 
   | Returns |
   | --------------|
@@ -79,13 +80,15 @@ This request deletes user record if provided data is valid and returns empty dic
 | --------------|
 | {} |
 
+## Weight
+
   > <span style="background-color: lightblue;
   border: 1px lightblue;
   font-size: 13px;
   line-height: 19px;
   overflow: auto;
   padding: 5px 5px;
-  border-radius: 3px;">GET</span> /api/user/weights/
+  border-radius: 3px;">GET</span> /api/weights/
 
 Endpoint returns list of dictionares that contains data about previous user weights.
 
@@ -96,6 +99,57 @@ Endpoint returns list of dictionares that contains data about previous user weig
 | Returns |
 | --------------|
 | [{<br>&nbsp;&nbsp;&nbsp;&nbsp;"value": value,<br>&nbsp;&nbsp;&nbsp;&nbsp;"date": date <br>}] |
+
+> <span style="background-color: lightblue;
+border: 1px lightblue;
+font-size: 13px;
+line-height: 19px;
+overflow: auto;
+padding: 5px 5px;
+border-radius: 3px;">GET</span> /api/weight/
+
+Endpoint returns weight_id if provided data is valid otherwise returns empty dictionary.
+
+| Required parameters |
+| ------------------- |
+| user_id            |
+| date            |
+
+| Returns |
+| --------------|
+| weight_id |
+
+> <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span> /api/weight/
+
+This request creates a new weight record if provided data is valid and returns weight_id otherwise returns empty dictionary.
+
+| Required parameters |
+| ------------------- |
+| user_id            |
+| date            |
+| value            |
+
+| Returns |
+| --------------|
+| weight_id |
+
+> <span style="background-color: #CC0000 ;
+            border: 1px #CC0000   ;
+            font-size: 13px;
+            line-height: 19px;
+            overflow: auto;
+            padding: 5px 5px;
+            border-radius: 3px;">DELETE</span> /api/weight/
+
+This request deletes weight record if provided data is valid and returns empty dictionary.
+
+| Required parameters |
+| ------------------- |
+| weight_id|
+
+| Returns |
+| --------------|
+| {}|
 
 ## Diary
 
