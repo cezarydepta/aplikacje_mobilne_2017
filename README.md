@@ -80,6 +80,18 @@ This request deletes user record if provided data is valid and returns empty dic
 | --------------|
 | {} |
 
+  > <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span> </span>  /api/profile/
+
+Endpoint returns information about username if provided data is valid otherwise returns empty dictionary.
+
+  | Required parameters |
+  | ------------------- |
+  | user_id            |
+
+  | Returns |
+  | --------------|
+| { "username": username,<br>&nbsp;&nbsp;"height": height,<br>&nbsp;&nbsp;"gender": gender,<br>&nbsp;&nbsp;"daily_carbs": daily_carbs,<br>&nbsp;&nbsp;"daily_proteins": daily_proteins<br>&nbsp;&nbsp;"daily_fat": daily_fat } |
+
 ## Weight
 
   > <span style="background-color: lightblue;
