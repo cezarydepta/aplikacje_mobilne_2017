@@ -19,5 +19,6 @@ urlpatterns = [
     path('meal/', views.MealView.as_view(), name='meal'),
     path('meal-type/', views.MealTypeView.as_view(), name='meal-type'),
     path('meal-types/', views.MealTypesView.as_view(), name='meal-types'),
+    path('user/', views.UserView.as_view(), name='user'),
 
 ]

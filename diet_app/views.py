@@ -151,3 +151,17 @@ class MealTypesView(APIView):
         serializer = MealTypesSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
+
+
+class UserView(APIView):
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.create(serializer.validated_data)
+        return Response(serializer.data)
+
+    def put(self, request):
+        serializer = UserUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(serializer.data, serializer.validated_data)
+        return Response(serializer.data)

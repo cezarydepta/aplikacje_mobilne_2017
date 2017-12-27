@@ -282,3 +282,32 @@ class MealTypesSerializer(serializers.Serializer):
     @property
     def data(self):
         return super(serializers.Serializer, self).data
+
+
+class UserCreateSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(max_length=128)
+    email = serializers.EmailField()
+
+    def create(self, validated_data):
+        return Profile.objects.get_or_create(**validated_data)[0]
+
+    def to_representation(self, instance):
+        profile = Profile.objects.get(**instance)
+        return {'user_id': profile.id}
+
+
+class UserUpdateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    height = serializers.IntegerField(required=False)
+    gender = serializers.CharField(max_length=1, required=False)
+    daily_carbs = serializers.FloatField(required=False)
+    daily_fat = serializers.FloatField(required=False)
+    daily_proteins = serializers.FloatField(required=False)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('id')
+        Profile.objects.update(**validated_data)
+
+    def to_representation(self, instance):
+        return {}
