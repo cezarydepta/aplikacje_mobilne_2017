@@ -336,3 +336,35 @@ class WeightListGetSerializer(serializers.Serializer):
     @property
     def data(self):
         return super(serializers.Serializer, self).data
+
+
+class WeightGetSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    date = serializers.DateField()
+
+    def to_representation(self, instance):
+        weight = Weight.objects.get(**instance)
+        return {'weight_id': weight.id}
+
+
+class WeightCreateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    date = serializers.DateField()
+    value = serializers.FloatField()
+
+    def create(self, validated_data):
+        return Weight.objects.get_or_create(**validated_data)[0]
+
+    def to_representation(self, instance):
+        weight = Weight.objects.get(**instance)
+        return {'weight_id': weight.id}
+
+
+class WeightDeleteSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        return {}
+
+    def delete(self, validated_data):
+        Weight.objects.filter(**validated_data).delete()
