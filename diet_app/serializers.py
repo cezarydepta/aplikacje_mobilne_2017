@@ -324,6 +324,19 @@ class UserDeleteSerializer(serializers.Serializer):
         return {}
 
 
+class ProfileGetSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        user = Profile.objects.get(**instance)
+        return {'username': user.username,
+                'height': user.height,
+                'gender': user.gender,
+                'daily_carbs': user.daily_carbs,
+                'daily_proteins': user.daily_proteins,
+                'daily_fat': user.daily_fat}
+
+
 class WeightListGetSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
 

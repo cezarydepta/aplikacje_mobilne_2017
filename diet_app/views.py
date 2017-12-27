@@ -173,6 +173,13 @@ class UserView(APIView):
         return Response(serializer.data)
 
 
+class ProfileView(APIView):
+    def post(self, request):
+        serializer = ProfileGetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+
+
 class WeightsView(APIView):
     def get(self, request):
         serializer = WeightListGetSerializer(data=request.query_params)

@@ -20,6 +20,7 @@ urlpatterns = [
     path('meal-type/', views.MealTypeView.as_view(), name='meal-type'),
     path('meal-types/', views.MealTypesView.as_view(), name='meal-types'),
     path('user/', views.UserView.as_view(), name='user'),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
     path('weights/', views.WeightsView.as_view(), name='weights'),
     path('weight/', views.WeightView.as_view(), name='weight'),
     path('login/', views.LoginView.as_view(), name='login'),
