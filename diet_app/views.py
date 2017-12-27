@@ -171,3 +171,10 @@ class UserView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.delete(serializer.validated_data)
         return Response(serializer.data)
+
+
+class WeightsView(APIView):
+    def get(self, request):
+        serializer = WeightListGetSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)

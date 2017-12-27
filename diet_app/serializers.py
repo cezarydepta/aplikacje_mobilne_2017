@@ -322,3 +322,17 @@ class UserDeleteSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return {}
+
+
+class WeightListGetSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        weights = Weight.objects.filter(**instance)
+        return [{'value': weight.value,
+                 'date': weight.date} for weight in weights
+                ]
+
+    @property
+    def data(self):
+        return super(serializers.Serializer, self).data
