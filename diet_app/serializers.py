@@ -311,3 +311,14 @@ class UserUpdateSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return {}
+
+
+class UserDeleteSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    password = serializers.CharField(max_length=128)
+
+    def delete(self, validated_data):
+        Profile.objects.filter(**validated_data).delete()
+
+    def to_representation(self, instance):
+        return {}
