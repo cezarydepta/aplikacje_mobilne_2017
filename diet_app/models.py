@@ -29,7 +29,7 @@ class Weight(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return str(self.date) + ' ' + str(self.value)
+        return '{}. Weight of {} from {}'.format(self.id, self.user.username, self.date)
 
 
 class Diary(models.Model):
@@ -41,7 +41,7 @@ class Diary(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return 'Diary for user {} from {}'.format(self.user, self.date)
+        return '{}. Diary for user {} from {}'.format(self.id, self.user, self.date)
 
 
 class MealType(models.Model):
@@ -53,7 +53,7 @@ class MealType(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return self.name
+        return '{}. {}'.format(self.id, self.name)
 
 
 class Meal(models.Model):
@@ -71,7 +71,7 @@ class Meal(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return str(self.id)
+        return '{}. {}'.format(self.id, self.meal_type.name)
 
 
 class Product(models.Model):
@@ -89,7 +89,7 @@ class Product(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return self.name
+        return '{}. {}'.format(self.id, self.name)
 
 
 class Ingredient(models.Model):
@@ -103,7 +103,7 @@ class Ingredient(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return str(self.product_id)
+        return '{}. {}'.format(self.id, self.product.name)
 
 
 class Discipline(models.Model):
@@ -115,7 +115,7 @@ class Discipline(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return self.name
+        return '{}. {}'.format(self.id, self.name)
 
     def to_representation(self):
         return {'id': self.id, 'name': self.name}
@@ -132,4 +132,4 @@ class Activity(models.Model):
 
     def __str__(self):
         """String representation of an object"""
-        return str(self.discipline)
+        return '{}. {} from {}'.format(self.id, self.discipline.name, self.diary.id)
