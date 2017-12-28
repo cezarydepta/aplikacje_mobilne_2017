@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.serializers import ListSerializer
 
@@ -313,11 +314,20 @@ class UserCreateSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     def create(self, validated_data):
-        return Profile.objects.get_or_create(**validated_data)[0]
+        try:
+            return Profile.objects.create_user(**validated_data)
+
+        except IntegrityError:
+            return {}
 
     def to_representation(self, instance):
-        profile = Profile.objects.get(**instance)
-        return {'user_id': profile.id}
+        instance.pop('password')
+        try:
+            profile = Profile.objects.get(**instance)
+            return {'user_id': profile.id}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class UserUpdateSerializer(serializers.Serializer):

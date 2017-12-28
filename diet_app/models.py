@@ -16,6 +16,7 @@ class Profile(User):
     """Daily user fats cap."""
     daily_proteins = models.FloatField(null=True, blank=True)
     """Daily user proteins cap."""
+    User._meta.get_field('email')._unique = True
 
 
 class Weight(models.Model):
