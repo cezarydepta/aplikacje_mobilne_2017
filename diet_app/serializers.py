@@ -13,6 +13,7 @@ class DiarySerializer(serializers.Serializer):
         try:
             diary = Diary.objects.get(**instance)
             return {'diary_id': diary.id}
+
         except ObjectDoesNotExist:
             return {}
 
@@ -29,6 +30,7 @@ class ActivityGetSerializer(serializers.Serializer):
             return {'name': activity.discipline.name,
                     'calories_burn': activity.discipline.calories_burn,
                     'time': activity.time}
+
         except ObjectDoesNotExist:
             return {}
 
@@ -56,7 +58,7 @@ class ActivityDeleteSerializer(serializers.Serializer):
 
 
 class ActivitiesListSerializer(serializers.Serializer):
-    diary_id = serializers.IntegerField
+    diary_id = serializers.IntegerField()
 
     def to_representation(self, instance):
         activities = Activity.objects.filter(**instance)
@@ -74,9 +76,13 @@ class DisciplineSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        discipline = Discipline.objects.get(**instance)
-        return {'name': discipline.name,
-                'calories_burn': discipline.calories_burn}
+        try:
+            discipline = Discipline.objects.get(**instance)
+            return {'name': discipline.name,
+                    'calories_burn': discipline.calories_burn}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class DisciplinesSerializer(serializers.Serializer):
@@ -162,18 +168,22 @@ class MealGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        meal = Meal.objects.get(**instance)
-        ingredients = Ingredient.objects.filter(meal=meal)
-        ingredients_list = []
-        for ingredient in ingredients:
-            ingredients_list.append({'ingredient_id': ingredient.id,
-                                     'name': ingredient.product.name,
-                                     'amount': ingredient.amount})
-        return {'total_kcal': meal.total_kcal,
-                'total_carbs': meal.total_carbs,
-                'total_proteins': meal.total_proteins,
-                'total_fat': meal.total_fat,
-                'ingredients': ingredients_list}
+        try:
+            meal = Meal.objects.get(**instance)
+            ingredients = Ingredient.objects.filter(meal=meal)
+            ingredients_list = []
+            for ingredient in ingredients:
+                ingredients_list.append({'ingredient_id': ingredient.id,
+                                         'name': ingredient.product.name,
+                                         'amount': ingredient.amount})
+            return {'total_kcal': meal.total_kcal,
+                    'total_carbs': meal.total_carbs,
+                    'total_proteins': meal.total_proteins,
+                    'total_fat': meal.total_fat,
+                    'ingredients': ingredients_list}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class MealCreateSerializer(serializers.Serializer):
@@ -195,12 +205,17 @@ class MealUpdateSerializer(serializers.Serializer):
     total_fat = serializers.FloatField(required=False)
 
     def to_representation(self, instance):
-        meal = Meal.objects.get(id=instance.get('id'))
-        return {'id': meal.id}
+        try:
+            meal = Meal.objects.get(id=instance.get('id'))
+            return {'id': meal.id}
+
+        except ObjectDoesNotExist:
+            return {}
 
     def update(self, instance, validated_data):
+        meal_id = validated_data.get('id')
         validated_data.pop('id')
-        Meal.objects.update(**validated_data)
+        Meal.objects.filter(id=meal_id).update(**validated_data)
 
 
 class MealDeleteSerializer(serializers.Serializer):
@@ -217,20 +232,24 @@ class MealTypeGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        meal_type = MealType.objects.get(**instance)
-        meal = Meal.objects.get(meal_type=meal_type)
-        ingredients = Ingredient.objects.filter(meal=meal)
-        ingredients_list = []
-        for ingredient in ingredients:
-            ingredients_list.append({'ingredient_id': ingredient.id,
-                                     'name': ingredient.product.name,
-                                     'amount': ingredient.amount})
-        return {'name': meal_type.name,
-                'total_kcal': meal.total_kcal,
-                'total_carbs': meal.total_carbs,
-                'total_proteins': meal.total_proteins,
-                'total_fat': meal.total_fat,
-                'ingredients': ingredients_list}
+        try:
+            meal_type = MealType.objects.get(**instance)
+            meal = Meal.objects.get(meal_type=meal_type)
+            ingredients = Ingredient.objects.filter(meal=meal)
+            ingredients_list = []
+            for ingredient in ingredients:
+                ingredients_list.append({'ingredient_id': ingredient.id,
+                                         'name': ingredient.product.name,
+                                         'amount': ingredient.amount})
+            return {'name': meal_type.name,
+                    'total_kcal': meal.total_kcal,
+                    'total_carbs': meal.total_carbs,
+                    'total_proteins': meal.total_proteins,
+                    'total_fat': meal.total_fat,
+                    'ingredients': ingredients_list}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class MealTypeCreateSerializer(serializers.Serializer):
@@ -259,25 +278,29 @@ class MealTypesSerializer(serializers.Serializer):
     diary_id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        diary = Diary.objects.get(id=instance.get('diary_id'))
-        meal_types = MealType.objects.filter(diary=diary)
-        data = []
-        for meal_type in meal_types:
-            meal = Meal.objects.get(meal_type=meal_type)
-            ingredients = Ingredient.objects.filter(meal=meal)
-            ingredients_list = []
-            for ingredient in ingredients:
-                ingredients_list.append({'ingredient_id': ingredient.id,
-                                         'name': ingredient.product.name,
-                                         'amount': ingredient.amount})
-            data.append({'meal_type_id': meal_type.id,
-                         'name': meal_type.name,
-                         'total_kcal': meal.total_kcal,
-                         'total_carbs': meal.total_carbs,
-                         'total_proteins': meal.total_proteins,
-                         'total_fat': meal.total_fat,
-                         'ingredients': ingredients_list})
-        return data
+        try:
+            diary = Diary.objects.get(id=instance.get('diary_id'))
+            meal_types = MealType.objects.filter(diary=diary)
+            data = []
+            for meal_type in meal_types:
+                meal = Meal.objects.get(meal_type=meal_type)
+                ingredients = Ingredient.objects.filter(meal=meal)
+                ingredients_list = []
+                for ingredient in ingredients:
+                    ingredients_list.append({'ingredient_id': ingredient.id,
+                                             'name': ingredient.product.name,
+                                             'amount': ingredient.amount})
+                data.append({'meal_type_id': meal_type.id,
+                             'name': meal_type.name,
+                             'total_kcal': meal.total_kcal,
+                             'total_carbs': meal.total_carbs,
+                             'total_proteins': meal.total_proteins,
+                             'total_fat': meal.total_fat,
+                             'ingredients': ingredients_list})
+            return data
+
+        except ObjectDoesNotExist:
+            return {}
 
     @property
     def data(self):
@@ -306,8 +329,9 @@ class UserUpdateSerializer(serializers.Serializer):
     daily_proteins = serializers.FloatField(required=False)
 
     def update(self, instance, validated_data):
+        user_id = validated_data.get('id')
         validated_data.pop('id')
-        Profile.objects.update(**validated_data)
+        Profile.objects.filter(id=user_id).update(**validated_data)
 
     def to_representation(self, instance):
         return {}
@@ -328,13 +352,17 @@ class ProfileGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        user = Profile.objects.get(**instance)
-        return {'username': user.username,
-                'height': user.height,
-                'gender': user.gender,
-                'daily_carbs': user.daily_carbs,
-                'daily_proteins': user.daily_proteins,
-                'daily_fat': user.daily_fat}
+        try:
+            user = Profile.objects.get(**instance)
+            return {'username': user.username,
+                    'height': user.height,
+                    'gender': user.gender,
+                    'daily_carbs': user.daily_carbs,
+                    'daily_proteins': user.daily_proteins,
+                    'daily_fat': user.daily_fat}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class WeightListGetSerializer(serializers.Serializer):
@@ -356,8 +384,12 @@ class WeightGetSerializer(serializers.Serializer):
     date = serializers.DateField()
 
     def to_representation(self, instance):
-        weight = Weight.objects.get(**instance)
-        return {'weight_id': weight.id}
+        try:
+            weight = Weight.objects.get(**instance)
+            return {'weight_id': weight.id}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class WeightCreateSerializer(serializers.Serializer):
@@ -388,5 +420,9 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128)
 
     def to_representation(self, instance):
-        user = Profile.objects.get(**instance)
-        return {'user_id': user.id}
+        try:
+            user = Profile.objects.get(**instance)
+            return {'user_id': user.id}
+
+        except ObjectDoesNotExist:
+            return {}
