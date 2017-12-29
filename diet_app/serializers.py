@@ -352,7 +352,10 @@ class UserDeleteSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128)
 
     def delete(self, validated_data):
-        Profile.objects.filter(**validated_data).delete()
+        user = Profile.objects.get(id=validated_data.get('id'))
+
+        if user.check_password(validated_data.get('password')):
+            user.delete()
 
     def to_representation(self, instance):
         return {}
