@@ -46,7 +46,7 @@ This request updates user profile if provided data is valid and returns empty di
 
   | Required parameters |
   | ------------------- |
-  | user_id            |
+  | id            |
 
 
   | Optional parametrs |
@@ -73,7 +73,7 @@ This request deletes user record if provided data is valid and returns empty dic
 
 | Required parameters |
 | ------------------- |
-| user_id            |
+| id            |
 | password            |
 
 | Returns |
@@ -86,7 +86,7 @@ Endpoint returns information about username if provided data is valid otherwise 
 
   | Required parameters |
   | ------------------- |
-  | user_id            |
+  | id            |
 
   | Returns |
   | --------------|
@@ -157,7 +157,7 @@ This request deletes weight record if provided data is valid and returns empty d
 
 | Required parameters |
 | ------------------- |
-| weight_id|
+| id|
 
 | Returns |
 | --------------|
@@ -211,7 +211,7 @@ Endpoint returns information about meal if provided data is valid otherwise retu
 
   | Required parameters |
   | ------------------- |
-  | meal_id            |
+  | id            |
 
   | Returns |
   | --------------|
@@ -242,7 +242,7 @@ This request create a new meal record if provided data is valid and returns meal
 
   | Required parameters |
   | ------------------- |
-  | meal_id            |
+  |id            |
   |total_kcal|
   |total_carbs|
   |total_proteins|
@@ -264,7 +264,7 @@ This request deletes meal record if provided data is valid and returns empty dic
 
 | Required parameters |
 | ------------------- |
-| meal_id            |
+| id            |
 
 | Returns |
 | --------------|
@@ -303,7 +303,7 @@ Endpoint returns information about meal type.
 
 | Required parameters |
 | ------------------- |
-| meal_type_id            |
+| id            |
 
 | Returns |
 | --------------|
@@ -335,7 +335,7 @@ This request deletes meal type record if provided data is valid and returns empt
 
 | Required parameters |
 | ------------------- |
-| meal_type_id           |
+| id           |
 
 | Returns |
 | --------------|
@@ -369,7 +369,7 @@ This request deletes ingredient record if provided data is valid and return empt
 
 | Required parameters |
 | ------------------- |
-| ingredient_id            |
+| id            |
 
 | Returns |
 | --------------|
@@ -407,7 +407,7 @@ Endpoint returns a dictionary that contains product data if provided data is val
 
 | Required parameters |
 | ------------------- |
-| product_id            |
+| id            |
 
 | Returns |
 | --------------|
@@ -475,7 +475,7 @@ This request deletes activity record if provided data is valid and return empty 
 
 | Required parameters |
 | ------------------- |
-| activity_id            |
+| id            |
 
 | Returns |
 | --------------|
@@ -513,7 +513,7 @@ Endpoint returns a dictionary that contains discipline data if provided data is 
 
 | Required parameters |
 | ------------------- |
-| discipline_id            |
+| id            |
 
 | Returns |
 | --------------|
