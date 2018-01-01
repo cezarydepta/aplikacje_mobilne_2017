@@ -705,4 +705,94 @@ class MealTypesViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'diary_id': ['This field is required.']}
 
+
+class UserViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test."""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.username1 = 'jkowalski'
+        self.password1 = 'kowi123'
+        self.email1 = 'kowi@kowi.com'
+        self.username2 = 'abc'
+        self.password2 = 'kowadlo123'
+        self.email2 = 'abc@bca.com'
+        self.user = Profile.objects.create_user(username=self.username1, password=self.password1, email=self.email1)
+        self.height = 180
+        self.gender = 'M'
+        self.daily_carbs = 20
+        self.daily_fat = 20
+        self.daily_proteins = 20
+
+    def test_user_post_correct_params(self):
+        """Testing POST user view with correct params"""
+        count = Profile.objects.all().count()
+        response = self.client.post(reverse('user'), {'username': self.username2,
+                                                      'password': self.password2,
+                                                      'email': self.email2})
+        user = Profile.objects.get(id=2)
+        assert response.status_code == 200
+        assert response.json() == {'user_id': user.id}
+        assert count + 1 == Profile.objects.all().count()
+
+    def test_user_post_incorrect_params(self):
+        """Testing POST user view with incorrect params"""
+        count = Profile.objects.all().count()
+        response = self.client.post(reverse('user'), {'username': self.username2,
+                                                      'password': self.password2,
+                                                      'email': 'abc'})
+        assert response.status_code == 400
+        assert response.json() == {'email': ['Enter a valid email address.']}
+        assert count == Profile.objects.all().count()
+
+    def test_user_post_missing_params(self):
+        """Testing POST user view with missing params"""
+        count = Profile.objects.all().count()
+        response = self.client.post(reverse('user'), {'username': self.username2,
+                                                      'password': self.password2})
+        assert response.status_code == 400
+        assert response.json() == {'email': ['This field is required.']}
+        assert count == Profile.objects.all().count()
+
+    def test_user_put_correct_params(self):
+        """Testing PUT user view with correct params"""
+        old_user = Profile.objects.get(id=self.user.id)
+        response = self.client.put(reverse('user'), {'id': self.user.id,
+                                                     'height': self.height,
+                                                     'gender': self.gender,
+                                                     'daily_carbs': self.daily_carbs,
+                                                     'daily_fat': self.daily_fat,
+                                                     'daily_proteins': self.daily_proteins})
+        updated_user = Profile.objects.get(id=self.user.id)
+        assert response.status_code == 200
+        assert response.json() == {}
+        assert old_user.daily_proteins != updated_user.daily_proteins
+
+    def test_user_put_incorrect_params(self):
+        """Testing PUT user view with incorrect params"""
+        old_user = Profile.objects.get(id=self.user.id)
+        response = self.client.put(reverse('user'), {'id': 'kanapka',
+                                                     'height': self.height,
+                                                     'gender': self.gender,
+                                                     'daily_carbs': self.daily_carbs,
+                                                     'daily_fat': self.daily_fat,
+                                                     'daily_proteins': self.daily_proteins})
+        updated_user = Profile.objects.get(id=self.user.id)
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+        assert old_user.daily_proteins == updated_user.daily_proteins
+
+    def test_user_put_missing_params(self):
+        """Testing PUT user view with missing params"""
+        old_user = Profile.objects.get(id=self.user.id)
+        response = self.client.put(reverse('user'), {'height': self.height,
+                                                     'gender': self.gender,
+                                                     'daily_carbs': self.daily_carbs,
+                                                     'daily_fat': self.daily_fat,
+                                                     'daily_proteins': self.daily_proteins})
+        updated_user = Profile.objects.get(id=self.user.id)
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert old_user.daily_proteins == updated_user.daily_proteins
+
 # TODO UserView, ProfileView, WeightsView, WeightView, LoginView
