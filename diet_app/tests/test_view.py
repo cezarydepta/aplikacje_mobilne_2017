@@ -976,4 +976,36 @@ class WeightViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'user_id': ['This field is required.']}
 
-# TODO, WeightsView, LoginView
+
+class LoginViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test."""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.username = 'jkowalski'
+        self.password = 'kowi123'
+        self.email = 'kowi@kowi.com'
+        self.user = Profile.objects.create_user(username=self.username,
+                                                password=self.password,
+                                                email=self.email)
+
+    def test_login_post_correct_params(self):
+        """Testing POST login view with correct params"""
+        response = self.client.post(reverse('login'), {'username': self.user.username,
+                                                       'password': self.user.password})
+        assert response.status_code == 200
+        assert response.json() == {'user_id': self.user.id}
+
+    def test_login_post_incorrect_params(self):
+        """Testing POST login view with incorrect params"""
+        response = self.client.post(reverse('login'), {'username': self.user.username,
+                                                       'password': ''})
+        assert response.status_code == 400
+        assert response.json() == {'password': ['This field may not be blank.']}
+
+    def test_login_post_missing_params(self):
+        """Testing POST login view with missing params"""
+        response = self.client.post(reverse('login'), {'username': self.user.username})
+        assert response.status_code == 400
+        assert response.json() == {'password': ['This field is required.']}
+
