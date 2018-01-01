@@ -503,6 +503,44 @@ class MealViewTests(TestCase):
         assert count == Meal.objects.all().count()
         assert response.json() == {'meal_type_id': ['This field is required.']}
 
+    def test_meal_put_correct_params(self):
+        """Testing PUT meal view with correct params"""
+        old_meal = Meal.objects.get(id=self.meal.id)
+        response = self.client.put(reverse('meal'), {'id': self.meal.id,
+                                                     'total_kcal': 100,
+                                                     'total_carbs': 10,
+                                                     'total_proteins': 10,
+                                                     'total_fat': 10})
+        new_meal = Meal.objects.get(id=self.meal.id)
+        assert response.status_code == 200
+        assert response.json() == {'meal_id': self.meal.id}
+        assert old_meal.total_kcal != new_meal.total_kcal
+
+    def test_meal_put_incorrect_params(self):
+        """Testing PUT meal view with incorrect params"""
+        old_meal = Meal.objects.get(id=self.meal.id)
+        response = self.client.put(reverse('meal'), {'id': self.meal.id,
+                                                     'total_kcal': 100,
+                                                     'total_carbs': 10,
+                                                     'total_proteins': 10,
+                                                     'total_fat': 'kanapka'})
+        new_meal = Meal.objects.get(id=self.meal.id)
+        assert response.status_code == 400
+        assert response.json() == {'total_fat': ['A valid number is required.']}
+        assert old_meal.total_kcal == new_meal.total_kcal
+
+    def test_meal_put_missing_params(self):
+        """Testing PUT meal view with missing params"""
+        old_meal = Meal.objects.get(id=self.meal.id)
+        response = self.client.put(reverse('meal'), {'total_kcal': 100,
+                                                     'total_carbs': 10,
+                                                     'total_proteins': 10,
+                                                     'total_fat': 10})
+        new_meal = Meal.objects.get(id=self.meal.id)
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert old_meal.total_kcal == new_meal.total_kcal
+
 
 
 

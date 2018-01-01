@@ -212,7 +212,7 @@ class MealUpdateSerializer(serializers.Serializer):
     def to_representation(self, instance):
         try:
             meal = Meal.objects.get(id=instance.get('id'))
-            return {'id': meal.id}
+            return {'meal_id': meal.id}
 
         except ObjectDoesNotExist:
             return {}

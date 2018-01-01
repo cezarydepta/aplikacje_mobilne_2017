@@ -250,7 +250,7 @@ This request create a new meal record if provided data is valid and returns meal
 
   | Returns |
   | --------------|
-  | {} |
+  | {'meal_id': id} |
 
 > <span style="background-color: #CC0000 ;
             border: 1px #CC0000   ;
