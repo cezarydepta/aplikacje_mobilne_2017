@@ -635,5 +635,29 @@ class MealTypeViewTests(TestCase):
         assert response.json() == {'diary_id': ['This field is required.']}
         assert count == MealType.objects.all().count()
 
+    def test_meal_type_delete_correct_params(self):
+        """Testing DELETE meal-type view with correct params"""
+        count = MealType.objects.all().count()
+        response = self.client.delete(reverse('meal-type'), {'id': self.meal_type1.id})
+        assert response.status_code == 200
+        assert response.json() == {}
+        assert count - 1 == MealType.objects.all().count()
+
+    def test_meal_type_delete_incorrect_params(self):
+        """Testing DELETE meal-type view with incorrect params"""
+        count = MealType.objects.all().count()
+        response = self.client.delete(reverse('meal-type'), {'id': 'abc'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+        assert count == MealType.objects.all().count()
+
+    def test_meal_type_delete_missing_params(self):
+        """Testing DELETE meal-type view with missing params"""
+        count = MealType.objects.all().count()
+        response = self.client.delete(reverse('meal-type'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert count == MealType.objects.all().count()
+
 
 # TODO MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView
