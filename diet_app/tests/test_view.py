@@ -660,4 +660,49 @@ class MealTypeViewTests(TestCase):
         assert count == MealType.objects.all().count()
 
 
-# TODO MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView
+class MealTypesViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test"""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.date = "2017-12-13"
+        self.name = 'Przystawka'
+        self.user = Profile.objects.create(username='testytest', password='passsssss')
+        self.diary = Diary.objects.create(user=self.user, date=self.date)
+        self.meal_type1 = MealType.objects.create(diary=self.diary, name='Śniadanko')
+        self.meal_type2 = MealType.objects.create(diary=self.diary, name='Lunch')
+        self.meal1 = Meal.objects.create(meal_type=self.meal_type1)
+        self.meal2 = Meal.objects.create(meal_type=self.meal_type2)
+        self.product1 = Product.objects.create(name='Kaszanka', kcal=500, carbs=10, proteins=10, fat=10)
+        self.product2 = Product.objects.create(name='Śledziki', kcal=400, carbs=0, proteins=20, fat=15)
+        self.ingredient1 = Ingredient.objects.create(meal=self.meal1, product=self.product1, amount=2.2)
+        self.ingredient2 = Ingredient.objects.create(meal=self.meal1, product=self.product2, amount=1.3)
+        self.ingredient3 = Ingredient.objects.create(meal=self.meal2, product=self.product2, amount=0.3)
+
+    def test_meal_types_get_correct_params(self):
+        """Testing GET meal-types view with correct params"""
+        response = self.client.get(reverse('meal-types'), {'diary_id': self.diary.id})
+        assert response.status_code == 200
+        assert response.json() == [
+            {
+                'meal_type_id': 1, 'name': 'Śniadanko', 'total_kcal': None, 'total_carbs': None, 'total_proteins': None,
+                'total_fat': None, 'ingredients': [{'ingredient_id': 1, 'name': 'Kaszanka', 'amount': 2.2},
+                                                   {'ingredient_id': 2, 'name': 'Śledziki', 'amount': 1.3}]},
+            {
+                'meal_type_id': 2, 'name': 'Lunch', 'total_kcal': None, 'total_carbs': None, 'total_proteins': None,
+                'total_fat': None, 'ingredients': [{'ingredient_id': 3, 'name': 'Śledziki', 'amount': 0.3}]}
+        ]
+
+    def test_meal_types_get_incorrect_params(self):
+        """Testing GET meal-types view with incorrect params"""
+        response = self.client.get(reverse('meal-types'), {'diary_id': 'abc'})
+        assert response.status_code == 400
+        assert response.json() == {'diary_id': ['A valid integer is required.']}
+
+    def test_meal_types_get_missing_params(self):
+        """Testing GET meal-types view with missing params"""
+        response = self.client.get(reverse('meal-types'), {})
+        assert response.status_code == 400
+        assert response.json() == {'diary_id': ['This field is required.']}
+
+# TODO UserView, ProfileView, WeightsView, WeightView, LoginView
