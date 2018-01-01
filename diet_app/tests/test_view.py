@@ -541,6 +541,29 @@ class MealViewTests(TestCase):
         assert response.json() == {'id': ['This field is required.']}
         assert old_meal.total_kcal == new_meal.total_kcal
 
+    def test_meal_delete_correct_params(self):
+        """Testing DELETE meal view with correct params"""
+        count = Meal.objects.all().count()
+        response = self.client.delete(reverse('meal'), {'id': self.meal.id})
+        assert response.status_code == 200
+        assert response.json() == {}
+        assert count - 1 == Meal.objects.all().count()
+
+    def test_meal_delete_incorrect_params(self):
+        """Testing DELETE meal view with incorrect params"""
+        count = Meal.objects.all().count()
+        response = self.client.delete(reverse('meal'), {'id': 'kanapka'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+        assert count == Meal.objects.all().count()
+
+    def test_meal_delete_missing_params(self):
+        """Testing DELETE meal view with missing params"""
+        count = Meal.objects.all().count()
+        response = self.client.delete(reverse('meal'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert count == Meal.objects.all().count()
 
 
 
@@ -548,4 +571,6 @@ class MealViewTests(TestCase):
 
 
 
-# TODO MealView, MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView
+
+
+# TODO MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView
