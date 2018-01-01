@@ -445,8 +445,9 @@ class MealViewTests(TestCase):
         self.date = "2017-12-13"
         self.user = Profile.objects.create(username='testytest', password='passsssss')
         self.diary = Diary.objects.create(user=self.user, date=self.date)
-        self.meal_type = MealType.objects.create(diary=self.diary, name='Śniadanko')
-        self.meal = Meal.objects.create(meal_type=self.meal_type)
+        self.meal_type1 = MealType.objects.create(diary=self.diary, name='Śniadanko')
+        self.meal_type2 = MealType.objects.create(diary=self.diary, name='Lunch')
+        self.meal = Meal.objects.create(meal_type=self.meal_type1)
         self.product1 = Product.objects.create(name='Kaszanka', kcal=500, carbs=10, proteins=10, fat=10)
         self.product2 = Product.objects.create(name='Śledziki', kcal=400, carbs=0, proteins=20, fat=15)
         self.ingredient1 = Ingredient.objects.create(meal=self.meal, product=self.product1, amount=2.2)
@@ -477,5 +478,36 @@ class MealViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'id': ['This field is required.']}
 
+    def test_meal_post_correct_params(self):
+        """Testing POST meal view with correct params"""
+        count = Meal.objects.all().count()
+        response = self.client.post(reverse('meal'), {'meal_type_id': self.meal_type2.id})
+        new_meal = Meal.objects.get(id=2)
+        assert response.status_code == 200
+        assert count + 1 == Meal.objects.all().count()
+        assert response.json() == {'meal_id': new_meal.id}
 
-        # TODO MealView, MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView
+    def test_meal_post_incorrect_params(self):
+        """Testing POST meal view with incorrect params"""
+        count = Meal.objects.all().count()
+        response = self.client.post(reverse('meal'), {'meal_type_id': 'kanapka'})
+        assert response.status_code == 400
+        assert count == Meal.objects.all().count()
+        assert response.json() == {'meal_type_id': ['A valid integer is required.']}
+
+    def test_meal_post_missing_params(self):
+        """Testing POST meal view with missing params"""
+        count = Meal.objects.all().count()
+        response = self.client.post(reverse('meal'), {})
+        assert response.status_code == 400
+        assert count == Meal.objects.all().count()
+        assert response.json() == {'meal_type_id': ['This field is required.']}
+
+
+
+
+
+
+
+
+# TODO MealView, MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView

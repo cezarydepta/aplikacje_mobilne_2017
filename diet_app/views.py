@@ -112,6 +112,7 @@ class MealView(APIView):
     def post(self, request):
         serializer = MealCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.create(serializer.validated_data)
         return Response(serializer.data)
 
     def put(self, request):

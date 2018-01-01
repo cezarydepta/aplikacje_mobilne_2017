@@ -195,7 +195,7 @@ class MealCreateSerializer(serializers.Serializer):
     meal_type_id = serializers.IntegerField()
 
     def create(self, validated_data):
-        return Ingredient.objects.get_or_create(**validated_data)[0]
+        return Meal.objects.get_or_create(**validated_data)[0]
 
     def to_representation(self, instance):
         meal = Meal.objects.get(**instance)
