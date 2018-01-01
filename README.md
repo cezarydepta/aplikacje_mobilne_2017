@@ -1,3 +1,10 @@
+# First run
+Install required packages using `pip install -r requirements.txt` <br>
+Create database using `python3 manage.py migrate` <br>
+To populate database with random records (users, products and disciplines) use `python3 populate/populate_database.py `
+
+Finally, to run server use `python3 manage.py runserver`
+
 ## Login
 
 > <span style="background-color: lightgreen;border: 1px lightgreen;font-size: 13px;line-height: 19px;  overflow: auto;padding: 5px 5px;border-radius: 3px;">POST</span>  /api/login/
@@ -14,7 +21,7 @@ Endpoint returns user_id if provided data is valid otherwise returns empty dicti
 | user_id or {} |
 
 
-
+# API
 
 ## User
 

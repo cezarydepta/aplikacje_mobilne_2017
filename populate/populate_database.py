@@ -1,24 +1,24 @@
 import os
-
 from django.db import IntegrityError
-
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aplikacje_mobilne_2017.settings')
 import django
-import json
 django.setup()
 from diet_app.models import *
+import json
 
 
 def populate():
-    data = json.load(open('users.json'))
+    data = json.load(open('populate/users.json'))
     for x in data:
         add_user(x['username'], x['password'], x['email'])
 
-    data = json.load(open('products.json'))
+    data = json.load(open('populate/products.json'))
     for x in data:
         add_product(x['name'], x['kcal'], x['carbs'], x['proteins'], x['fat'])
 
-    data = json.load(open('disciplines.json'))
+    data = json.load(open('populate/disciplines.json'))
     for x in data:
         add_discipline(x['name'], x['calories_burn'])
 
