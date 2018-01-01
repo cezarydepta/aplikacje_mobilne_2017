@@ -822,4 +822,45 @@ class UserViewTests(TestCase):
         assert count == Profile.objects.all().count()
 
 
-# TODO UserView, ProfileView, WeightsView, WeightView, LoginView
+class UserViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test."""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.username1 = 'jkowalski'
+        self.password1 = 'kowi123'
+        self.email1 = 'kowi@kowi.com'
+        self.user = Profile.objects.create_user(username=self.username1,
+                                                password=self.password1,
+                                                email=self.email1)
+        Profile.objects.filter(id=self.user.id).update(height=180,
+                                                       gender='M',
+                                                       daily_carbs=20,
+                                                       daily_fat=20,
+                                                       daily_proteins=20)
+
+    def test_profile_post_correct_params(self):
+        """Testing POST profile view with correct params"""
+        response = self.client.post(reverse('profile'), {'id': self.user.id})
+        assert response.status_code == 200
+        assert response.json() == {'username': 'jkowalski',
+                                   'height': 180,
+                                   'gender': 'M',
+                                   'daily_carbs': 20.0,
+                                   'daily_proteins': 20.0,
+                                   'daily_fat': 20.0}
+
+    def test_profile_post_incorrect_params(self):
+        """Testing POST profile view with incorrect params"""
+        response = self.client.post(reverse('profile'), {'id': 'kanapka'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+
+    def test_profile_post_missing_params(self):
+        """Testing POST profile view with missing params"""
+        response = self.client.post(reverse('profile'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+
+
+# TODO ProfileView, WeightsView, WeightView, LoginView
