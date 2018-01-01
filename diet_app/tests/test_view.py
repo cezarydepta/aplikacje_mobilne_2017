@@ -572,6 +572,7 @@ class MealTypeViewTests(TestCase):
         self.factory = APIRequestFactory()
         self.client = APIClient()
         self.date = "2017-12-13"
+        self.name = 'Przystawka'
         self.user = Profile.objects.create(username='testytest', password='passsssss')
         self.diary = Diary.objects.create(user=self.user, date=self.date)
         self.meal_type1 = MealType.objects.create(diary=self.diary, name='Śniadanko')
@@ -606,6 +607,33 @@ class MealTypeViewTests(TestCase):
         response = self.client.get(reverse('meal-type'), {})
         assert response.status_code == 400
         assert response.json() == {'id': ['This field is required.']}
+
+    def test_meal_type_post_correct_params(self):
+        """Testing POST meal-type view with correct params"""
+        count = MealType.objects.all().count()
+        response = self.client.post(reverse('meal-type'), {'diary_id': self.diary.id,
+                                                           'name': self.name})
+        meal_type = MealType.objects.get(id=3)
+        assert response.status_code == 200
+        assert response.json() == {'meal_type_id': meal_type.id}
+        assert count + 1 == MealType.objects.all().count()
+
+    def test_meal_type_post_incorrect_params(self):
+        """Testing POST meal-type view with incorrect params"""
+        count = MealType.objects.all().count()
+        response = self.client.post(reverse('meal-type'), {'diary_id': 'kanapka',
+                                                           'name': self.name})
+        assert response.status_code == 400
+        assert response.json() == {'diary_id': ['A valid integer is required.']}
+        assert count == MealType.objects.all().count()
+
+    def test_meal_type_post_missing_params(self):
+        """Testing POST meal-type view with missing params"""
+        count = MealType.objects.all().count()
+        response = self.client.post(reverse('meal-type'), {'name': self.name})
+        assert response.status_code == 400
+        assert response.json() == {'diary_id': ['This field is required.']}
+        assert count == MealType.objects.all().count()
 
 
 # TODO MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView
