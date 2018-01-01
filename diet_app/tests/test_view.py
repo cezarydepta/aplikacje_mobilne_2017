@@ -822,7 +822,7 @@ class UserViewTests(TestCase):
         assert count == Profile.objects.all().count()
 
 
-class UserViewTests(TestCase):
+class ProfileViewTests(TestCase):
     def setUp(self):
         """Setting up for test."""
         self.factory = APIRequestFactory()
@@ -863,4 +863,117 @@ class UserViewTests(TestCase):
         assert response.json() == {'id': ['This field is required.']}
 
 
-# TODO ProfileView, WeightsView, WeightView, LoginView
+class WeightViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test."""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.username1 = 'jkowalski'
+        self.password1 = 'kowi123'
+        self.email1 = 'kowi@kowi.com'
+        self.date = "2017-12-13"
+        self.date2 = "2017-12-14"
+        self.user = Profile.objects.create_user(username=self.username1,
+                                                password=self.password1,
+                                                email=self.email1)
+        self.weight = Weight.objects.create(user=self.user, date=self.date, value=123)
+        self.weight2 = Weight.objects.create(user=self.user, date=self.date2, value=122)
+
+    def test_weight_get_correct_params(self):
+        """Testing GET weight view with correct params"""
+        response = self.client.get(reverse('weight'), {'user_id': self.user.id,
+                                                       'date': self.date})
+        assert response.status_code == 200
+        assert response.json() == {'weight_id': self.weight.id}
+
+    def test_weight_get_incorrect_params(self):
+        """Testing GET weight view with incorrect params"""
+        response = self.client.get(reverse('weight'), {'user_id': 'kanapka',
+                                                       'date': self.date})
+        assert response.status_code == 400
+        assert response.json() == {'user_id': ['A valid integer is required.']}
+
+    def test_weight_get_missing_params(self):
+        """Testing GET weight view with missing params"""
+        response = self.client.get(reverse('weight'), {'date': self.date})
+        assert response.status_code == 400
+        assert response.json() == {'user_id': ['This field is required.']}
+
+    def test_weight_post_correct_params(self):
+        """Testing POST weight view with correct params"""
+        count = Weight.objects.all().count()
+        response = self.client.post(reverse('weight'), {'user_id': self.user.id,
+                                                        'date': "2017-12-14",
+                                                        'value': 80})
+        weight = Weight.objects.get(id=3)
+        assert response.status_code == 200
+        assert response.json() == {'weight_id': weight.id}
+        assert count + 1 == Weight.objects.all().count()
+
+    def test_weight_post_incorrect_params(self):
+        """Testing POST weight view with incorrect params"""
+        count = Weight.objects.all().count()
+        response = self.client.post(reverse('weight'), {'user_id': self.user.id,
+                                                        'date': 30,
+                                                        'value': 80})
+        assert response.status_code == 400
+        assert response.json() == {'date': ['Date has wrong format. Use one of these formats instead: YYYY[-MM[-DD]].']}
+        assert count == Weight.objects.all().count()
+
+    def test_weight_post_missing_params(self):
+        """Testing POST weight view with missing params"""
+        count = Weight.objects.all().count()
+        response = self.client.post(reverse('weight'), {'user_id': self.user.id,
+                                                        'value': 80})
+        assert response.status_code == 400
+        assert response.json() == {'date': ['This field is required.']}
+        assert count == Weight.objects.all().count()
+
+    def test_weight_delete_correct_params(self):
+        """Testing DELETE weight view with correct params"""
+        count = Weight.objects.all().count()
+        response = self.client.delete(reverse('weight'), {'id': self.weight.id})
+        assert response.status_code == 200
+        assert response.json() == {}
+        assert count == Weight.objects.all().count() + 1
+
+    def test_weight_delete_incorrect_params(self):
+        """Testing DELETE weight view with incorrect params"""
+        count = Weight.objects.all().count()
+        response = self.client.delete(reverse('weight'), {'id': 'abc'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+        assert count == Weight.objects.all().count()
+
+    def test_weight_delete_missing_params(self):
+        """Testing DELETE weight view with missing params"""
+        count = Weight.objects.all().count()
+        response = self.client.delete(reverse('weight'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert count == Weight.objects.all().count()
+
+    def test_weights_get_correct_params(self):
+        """Testing GET weights view with correct params"""
+        response = self.client.get(reverse('weights'), {'user_id': self.user.id})
+        assert response.status_code == 200
+        assert response.json() == [
+            {'value': self.weight.value,
+             'date': self.weight.date},
+            {'value': self.weight2.value,
+             'date': self.weight2.date}
+        ]
+
+    def test_weights_get_incorrect_params(self):
+        """Testing GET weights view with incorrect params"""
+        response = self.client.get(reverse('weights'), {'user_id': 'abc'})
+        assert response.status_code == 400
+        assert response.json() == {'user_id': ['A valid integer is required.']}
+
+    def test_weights_get_missing_params(self):
+        """Testing GET weights view with missing params"""
+        response = self.client.get(reverse('weights'), {})
+        assert response.status_code == 400
+        assert response.json() == {'user_id': ['This field is required.']}
+
+# TODO, WeightsView, LoginView
