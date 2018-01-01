@@ -795,4 +795,31 @@ class UserViewTests(TestCase):
         assert response.json() == {'id': ['This field is required.']}
         assert old_user.daily_proteins == updated_user.daily_proteins
 
+    def test_user_delete_correct_params(self):
+        """Testing DELETE user view with correct params"""
+        count = Profile.objects.all().count()
+        response = self.client.delete(reverse('user'), {'id': self.user.id,
+                                                        'password': self.password1})
+        assert response.status_code == 200
+        assert response.json() == {}
+        assert count == Profile.objects.all().count() + 1
+
+    def test_user_delete_incorrect_params(self):
+        """Testing DELETE user view with incorrect params"""
+        count = Profile.objects.all().count()
+        response = self.client.delete(reverse('user'), {'id': 'kanapka',
+                                                        'password': self.password1})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+        assert count == Profile.objects.all().count()
+
+    def test_user_delete_missing_params(self):
+        """Testing DELETE user view with missing params"""
+        count = Profile.objects.all().count()
+        response = self.client.delete(reverse('user'), {'password': self.password1})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+        assert count == Profile.objects.all().count()
+
+
 # TODO UserView, ProfileView, WeightsView, WeightView, LoginView
