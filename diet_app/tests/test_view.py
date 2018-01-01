@@ -435,3 +435,47 @@ class IngredientViewTests(TestCase):
         assert response.status_code == 400
         assert response.json() == {'id': ['This field is required.']}
         assert count == Ingredient.objects.all().count()
+
+
+class MealViewTests(TestCase):
+    def setUp(self):
+        """Setting up for test"""
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        self.date = "2017-12-13"
+        self.user = Profile.objects.create(username='testytest', password='passsssss')
+        self.diary = Diary.objects.create(user=self.user, date=self.date)
+        self.meal_type = MealType.objects.create(diary=self.diary, name='Śniadanko')
+        self.meal = Meal.objects.create(meal_type=self.meal_type)
+        self.product1 = Product.objects.create(name='Kaszanka', kcal=500, carbs=10, proteins=10, fat=10)
+        self.product2 = Product.objects.create(name='Śledziki', kcal=400, carbs=0, proteins=20, fat=15)
+        self.ingredient1 = Ingredient.objects.create(meal=self.meal, product=self.product1, amount=2.2)
+        self.ingredient2 = Ingredient.objects.create(meal=self.meal, product=self.product2, amount=1.3)
+
+    def test_meal_get_correct_params(self):
+        """Testing GET meal view with correct params"""
+        response = self.client.get(reverse('meal'), {'id': self.meal.id})
+        assert response.status_code == 200
+        assert response.json() == {
+            'total_kcal': None,
+            'total_carbs': None,
+            'total_proteins': None,
+            'total_fat': None,
+            'ingredients': [{'ingredient_id': 1, 'name': 'Kaszanka', 'amount': 2.2},
+                            {'ingredient_id': 2, 'name': 'Śledziki', 'amount': 1.3}]
+        }
+
+    def test_meal_get_incorrect_params(self):
+        """Testing GET meal view with incorrect params"""
+        response = self.client.get(reverse('meal'), {'id': 'kanapka'})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['A valid integer is required.']}
+
+    def test_meal_get_missing_params(self):
+        """Testing GET meal view with missing params"""
+        response = self.client.get(reverse('meal'), {})
+        assert response.status_code == 400
+        assert response.json() == {'id': ['This field is required.']}
+
+
+        # TODO MealView, MealTypeView, MealTypesView, UserView, ProfileView, WeightsView, WeightView, LoginView

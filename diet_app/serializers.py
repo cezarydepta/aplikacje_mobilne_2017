@@ -120,12 +120,16 @@ class ProductGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
     def to_representation(self, instance):
-        product = Product.objects.get(**instance)
-        return {'name': product.name,
-                'kcal': product.kcal,
-                'carbs': product.carbs,
-                'proteins': product.proteins,
-                'fat': product.fat}
+        try:
+            product = Product.objects.get(**instance)
+            return {'name': product.name,
+                    'kcal': product.kcal,
+                    'carbs': product.carbs,
+                    'proteins': product.proteins,
+                    'fat': product.fat}
+
+        except ObjectDoesNotExist:
+            return {}
 
 
 class ProductsGetSerializer(serializers.Serializer):
