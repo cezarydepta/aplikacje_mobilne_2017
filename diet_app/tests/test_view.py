@@ -992,7 +992,7 @@ class LoginViewTests(TestCase):
     def test_login_post_correct_params(self):
         """Testing POST login view with correct params"""
         response = self.client.post(reverse('login'), {'username': self.user.username,
-                                                       'password': self.user.password})
+                                                       'password': self.password})
         assert response.status_code == 200
         assert response.json() == {'user_id': self.user.id}
 

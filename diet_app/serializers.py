@@ -438,8 +438,11 @@ class LoginSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         try:
-            user = Profile.objects.get(**instance)
-            return {'user_id': user.id}
+            user = Profile.objects.get(username=instance.get('username'))
+            if user.check_password(instance.get('password')):
+                return {'user_id': user.id}
+            else:
+                return {}
 
         except ObjectDoesNotExist:
             return {}
